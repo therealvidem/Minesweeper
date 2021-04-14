@@ -19,11 +19,11 @@ DEPS = $(wildcard *.h)
 
 all: $(TARGET)
 
+debug: FLAGS += -DDEBUG -g
+debug: $(TARGET)
+
 $(TARGET) : $(OBJ)
 	$(CXX) $(INCLUDE) $(FLAGS) $^ -o $@ $(LIBS)
-
-debug : $(OBJ)
-	$(CXX) -g $(INCLUDE) $(FLAGS) $^ -o $@ $(LIBS)
 
 clean:
 	rm -f $(TARGET)
