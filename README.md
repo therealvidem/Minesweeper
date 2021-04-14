@@ -1,14 +1,12 @@
 # Minesweeper
 
 ## Overview
----
 
 A simple Minesweeper game coded in C using RayLib.
 
 ## Developing
----
 
-First, install [RayLib](https://www.raylib.com/index.html). You will need the `libraylib.a` static library and `raylib.h` header file. If you are RayLib from source, these are found in `raylib/src` after executing make.
+First, install [RayLib](https://www.raylib.com/index.html). You will need the `libraylib.a` static library and `raylib.h` header file. Detailed instructions for Windows can be found [here](https://github.com/raysan5/raylib/wiki/Working-on-Windows). If you are compiling RayLib from source, these are found in `raylib/src` after executing make.
 
 Then, for this project, clone the repository:
 
