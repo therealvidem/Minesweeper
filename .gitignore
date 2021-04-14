@@ -1,4 +1,5 @@
 .vscode/
 include/
 lib/
-*.exe
+build/
+*.o
