@@ -30,7 +30,7 @@ bool StartGame(MinesweeperGame *game, Point startPoint)
     if (InBoard(game, startPoint))
     {
         game->startTime = clock();
-        
+        // TODO: Reveal cells at `startPoint`
     }
     return false;
 }
