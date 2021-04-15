@@ -1,6 +1,7 @@
 # Taken from https://www.reddit.com/r/raylib/comments/ecz6ja/problem_getting_started_with_project_cmake_file/fbf7e3o/
 
-TARGET = build/Minesweeper
+BUILD = build
+TARGET = $(BUILD)/Minesweeper
 
 SRC = src/main.c
 
@@ -15,7 +16,7 @@ OBJ = $(patsubst %.c, %.o, $(SRC))
 DEPS = $(wildcard *.h)
 
 %.o : %.c $(DEPS)
-	$(CXX) $(INCLUDE) $(FLAGS) -c $< -o $@ $(LIBS)
+	$(CXX) $(INCLUDE) $(FLAGS) -c $< -o $(BUILD)/$(@F) $(LIBS)
 
 all: $(TARGET)
 
@@ -23,7 +24,7 @@ debug: FLAGS += -DDEBUG -g
 debug: $(TARGET)
 
 $(TARGET) : $(OBJ)
-	$(CXX) $(INCLUDE) $(FLAGS) $^ -o $@ $(LIBS)
+	$(CXX) $(INCLUDE) $(FLAGS) $(BUILD)/$(^F) -o $@ $(LIBS)
 
 clean:
 	rm -f $(TARGET)
