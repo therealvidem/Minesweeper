@@ -9,8 +9,7 @@ typedef struct minesweeperGame
 {
     Board mines;
     Board flags;
-    Board revealed;
-    Board numbers[10];
+    Board numbers;
     bool alive;
     time_t startTime;
 

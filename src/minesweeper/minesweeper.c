@@ -4,9 +4,7 @@ void InitGame(MinesweeperGame *game, unsigned amountMines)
 {
     game->mines = CreateBoard(game->width, game->height);
     game->flags = CreateBoard(game->width, game->height);
-    game->revealed = CreateBoard(game->width, game->height);
-    for (int i = 0; i < 10; i++)
-        game->numbers[i] = CreateBoard(game->width, game->height);
+    game->numbers = CreateBoard(game->width, game->height);
     game->alive = false;
     game->startTime = (time_t)0;
 
@@ -27,7 +25,7 @@ void GenerateMines(MinesweeperGame *game, unsigned amount)
 
 bool StartGame(MinesweeperGame *game, Point startPoint)
 {
-    if (IsPointInBoard(game, startPoint))
+    if (IS_POINT_IN_BOARD(game, startPoint))
     {
         game->startTime = clock();
         // TODO: Reveal cells at `startPoint`

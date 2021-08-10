@@ -22,16 +22,16 @@ ARRAY_T GetValueAtPoint(const Board *board, Point point)
     return board->_arr[index];
 }
 
-void SetValueAtIndex(Board *board, INDEX_T index, ARRAY_T new_value)
+void SetValueAtIndex(Board *board, INDEX_T index, ARRAY_T newValue)
 {
-    board->_arr[index] = new_value;
+    board->_arr[index] = newValue;
 }
 
-bool SetValueAtPoint(Board *board, Point point, ARRAY_T new_value)
+bool SetValueAtPoint(Board *board, Point point, ARRAY_T newValue)
 {
-    if (IsPointInBoard(board, point))
+    if (IS_POINT_IN_BOARD(board, point))
     {
-        SetValueAtIndex(board, GetIndexFromPoint(board, point), new_value);
+        SetValueAtIndex(board, GetIndexFromPoint(board, point), newValue);
         return true;
     }
     return false;
@@ -46,7 +46,7 @@ bool IsBoardMarkedAtIndex(const Board *board, INDEX_T index)
 
 bool IsBoardMarkedAtPoint(const Board *board, Point point)
 {
-    if (IsPointInBoard(board, point))
+    if (IS_POINT_IN_BOARD(board, point))
         return board->_arr == (ARRAY_T)true;
     return false;
 }

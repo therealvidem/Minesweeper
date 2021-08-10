@@ -5,22 +5,22 @@
 #include "types.h"
 #include "point.h"
 
-const int NEIGHBOR_CELLS_X[] = {-1, -1, -1, 0, 0, 1, 1, 1};
-const int NEIGHBOR_CELLS_Y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
-const int NUM_NEIGHBORS = 8;
+const int neighborCellsX[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+const int neighborCellsY[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+const int numNeighbors = 8;
 // Gets the coordinates of the ith neighbor of `point` (from 0 to 7).
 // This is a macro defined as a comma-separated pair of values: x, y of the neighbor cell.
 // To use this, do:
 //   ```
-//   for (int i = 0; i < NUM_NEIGHBORS; i++)
+//   for (int i = 0; i < numNeighbors; i++)
 //   {
-//       INDEX_T neighborX, neighborY = GetNeighborCellIndex(point, i);
+//       INDEX_T neighborX, neighborY = GET_NEIGHBOR_CELL_INDEX(point, i);
 //       // can now do stuff like IsBoardMarkedAtPoint(board, Point{neighborX, neighborY})
 //   }
 //   ```
-#define GetNeighborCellIndex(point, i) point.x + NEIGHBOR_CELLS_X[i], point.y + NEIGHBOR_CELLS_Y[i]
+#define GET_NEIGHBOR_CELL_INDEX(point, i) point.x + neighborCellsX[i], point.y + neighborCellsY[i]
 
-#define IsPointInBoard(board, point) InBounds(point, board->width, board->height)
+#define IS_POINT_IN_BOARD(board, point) InBounds(point, board->width, board->height)
 
 typedef struct board
 {
@@ -45,11 +45,11 @@ INDEX_T GetIndexFromPoint(const Board *board, Point point);
 ARRAY_T GetValueAtPoint(const Board *board, Point point);
 
 // Does *not* check that the index is within bounds of the board array.
-void SetValueAtIndex(Board *board, INDEX_T index, ARRAY_T new_value);
+void SetValueAtIndex(Board *board, INDEX_T index, ARRAY_T newValue);
 
 // Also checks that the index is within bounds of the board array.
 // Returns true if successfully set, false otherwise.
-bool SetValueAtPoint(Board *board, Point point, ARRAY_T new_value);
+bool SetValueAtPoint(Board *board, Point point, ARRAY_T newValue);
 
 // Returns true if the cell at `index` exists and is marked 
 // (i.e., 1 inside the array), false otherwise.
