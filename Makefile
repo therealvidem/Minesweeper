@@ -9,8 +9,10 @@ INCLUDE = -I include/
 LIBS = -L lib/
 LIBS += -lraylib -lopengl32 -lgdi32 -lwinmm -lpthread
 
+STD = -std=c17
+
 CXX = gcc
-FLAGS = -Wall
+FLAGS = $(STD) -Wall
 
 OBJ = $(patsubst %.c, %.o, $(SRC))
 DEPS = $(wildcard *.h)

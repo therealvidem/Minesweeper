@@ -27,7 +27,7 @@ void GenerateMines(MinesweeperGame *game, unsigned amount)
 
 bool StartGame(MinesweeperGame *game, Point startPoint)
 {
-    if (InBoard(game, startPoint))
+    if (IsPointInBoard(game, startPoint))
     {
         game->startTime = clock();
         // TODO: Reveal cells at `startPoint`

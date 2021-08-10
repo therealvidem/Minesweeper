@@ -14,8 +14,8 @@ typedef struct minesweeperGame
     bool alive;
     time_t startTime;
 
-    POINT_T width;
-    POINT_T height;
+    INDEX_T width;
+    INDEX_T height;
 } MinesweeperGame;
 
 // Initializes `game` to default values and clears all boards.
