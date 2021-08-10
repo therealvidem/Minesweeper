@@ -81,4 +81,7 @@ bool UnmarkBoardAtIndex(Board *board, INDEX_T index);
 // Returns true if the cell was (successfully) changed, false otherwise.
 bool UnmarkBoardAtPoint(Board *board, Point point);
 
+// Frees the `board` that was dynamically allocated.
+void FreeBoard(Board *board);
+
 #endif

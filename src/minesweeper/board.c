@@ -107,3 +107,8 @@ bool UnmarkBoardAtPoint(Board *board, Point point)
         return true;
     return false;
 }
+
+void FreeBoard(Board *board)
+{
+    MemFree(board);
+}
