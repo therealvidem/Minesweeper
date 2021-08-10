@@ -11,6 +11,6 @@ typedef struct point
     INDEX_T y;
 } Point;
 
-int InBounds(Point point, INDEX_T width, INDEX_T height);
+bool InBounds(Point point, INDEX_T width, INDEX_T height);
 
 #endif
