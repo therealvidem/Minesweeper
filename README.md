@@ -4,6 +4,20 @@
 
 A simple Minesweeper game coded in C using [RayLib](https://www.raylib.com/).
 
+## TODO
+
+- [ ] Implement the backend of basic game functionality.
+- [ ] Implement the frontend (UI) of basic game functionality.
+- [ ] Add some basic testing.
+- [ ] Implement the recursive algorithm for opening.
+- [ ] Implement chording.
+- [ ] Add info texts, such as number of mines and a timer.
+- [ ] Add end screen.
+- [ ] Implement menu functionality.
+- [ ] Add multiple difficulties/sizes.
+- [ ] Add custom sizes.
+- [ ] Add (optional) animations.
+
 ## Developing
 
 First, install [RayLib](https://github.com/raysan5/raylib/wiki). You will need the `libraylib.a` static library and `raylib.h` header file. Detailed instructions for Windows can be found [here](https://github.com/raysan5/raylib/wiki/Working-on-Windows). If you are compiling RayLib from source, these are found in `raylib/src` after executing make.
