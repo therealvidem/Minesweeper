@@ -5,7 +5,7 @@
 
 // A simple point in a board with an INDEX_T int x and INDEX_T int y.
 // Index starts at 0.
-typedef struct point
+typedef struct
 {
     INDEX_T x;
     INDEX_T y;

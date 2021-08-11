@@ -1,6 +1,10 @@
-#include "board.h"
+#include "include/board.h"
 
-bool IsIndexInBoard(const Board *board, ARRAY_T index)
+const int neighborCellsX[] = {-1, 0, 1, 1, 1, 0, -1, -1};
+const int neighborCellsY[] = {-1, -1, -1, 0, 1, 1, 1, 0};
+const int numNeighbors = 8;
+
+bool IsIndexInBoard(const Board *board, INDEX_T index)
 {
     return index < board->width * board->height;
 }
@@ -12,8 +16,10 @@ bool IsPointInBoard(const Board *board, Point point)
 
 Board CreateBoard(INDEX_T width, INDEX_T height)
 {
-    ARRAY_T *_arr = MemAlloc(sizeof(ARRAY_T) * width * height);
-    return (Board){_arr, width, height};
+    size_t array_size = sizeof(ARRAY_T) * width * height;
+    ARRAY_T *arr = (ARRAY_T *)malloc(array_size);
+    memset(arr, 0, array_size);
+    return (Board){arr, width, height};
 }
 
 INDEX_T GetIndexFromPoint(const Board *board, Point point)
@@ -24,7 +30,7 @@ INDEX_T GetIndexFromPoint(const Board *board, Point point)
 Point GetPointFromIndex(const Board *board, INDEX_T index)
 {
     INDEX_T y = index / board->width;
-    INDEX_T x = y - board->width;
+    INDEX_T x = index % board->width;
     Point point = {
         .x = x,
         .y = y,
@@ -54,7 +60,7 @@ void SetValueAtIndex(Board *board, INDEX_T index, ARRAY_T newValue)
 
 bool SetValueAtPoint(Board *board, Point point, ARRAY_T newValue)
 {
-    if (IS_POINT_IN_BOARD(board, point))
+    if (IsPointInBoard(board, point))
     {
         SetValueAtIndex(board, GetIndexFromPoint(board, point), newValue);
         return true;
@@ -71,8 +77,8 @@ bool IsBoardMarkedAtIndex(const Board *board, INDEX_T index)
 
 bool IsBoardMarkedAtPoint(const Board *board, Point point)
 {
-    if (IS_POINT_IN_BOARD(board, point))
-        return board->_arr != (ARRAY_T)false;
+    if (IsPointInBoard(board, point))
+        return GetValueAtPoint(board, point) != (ARRAY_T)false;
     return false;
 }
 
@@ -87,28 +93,29 @@ bool MarkBoardAtIndex(Board *board, INDEX_T index)
 bool MarkBoardAtPoint(Board *board, Point point)
 {
     if (!IsBoardMarkedAtPoint(board, point))
-        SetValueAtPoint(board, point, (ARRAY_T)true);
-        return true;
+        return SetValueAtPoint(board, point, (ARRAY_T)true);
     return false;
 }
 
 bool UnmarkBoardAtIndex(Board *board, INDEX_T index)
 {
     if (IsBoardMarkedAtIndex(board, index))
+    {
         SetValueAtIndex(board, index, (ARRAY_T)false);
         return true;
+    }
     return false;
 }
 
 bool UnmarkBoardAtPoint(Board *board, Point point)
 {
     if (IsBoardMarkedAtPoint(board, point))
-        SetValueAtPoint(board, point, (ARRAY_T)false);
-        return true;
+        return SetValueAtPoint(board, point, (ARRAY_T)false);
     return false;
 }
 
 void FreeBoard(Board *board)
 {
-    MemFree(board);
+    if (board != NULL)
+        free(board);
 }

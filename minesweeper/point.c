@@ -1,4 +1,4 @@
-#include "point.h"
+#include "include/point.h"
 
 bool InBounds(Point point, INDEX_T width, INDEX_T height)
 {

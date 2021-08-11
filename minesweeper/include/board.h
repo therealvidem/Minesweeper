@@ -1,13 +1,14 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include <raylib.h>
+#include <stdlib.h>
+#include <string.h>
 #include "types.h"
 #include "point.h"
 
-const int neighborCellsX[] = {-1, 0, 1, 1, 1, 0, -1, -1};
-const int neighborCellsY[] = {-1, -1, -1, 0, 1, 1, 1, 0};
-const int numNeighbors = 8;
+extern const int neighborCellsX[];
+extern const int neighborCellsY[];
+extern const int numNeighbors;
 // Gets the coordinates of the ith neighbor of `point` (from 0 to 7).
 // The order of the neighbors start at the top-left (when viewing top-left corner as x = 0, y = 0), then
 // goes clockwise. So, the 0th neighbor of (4, 5) is (3, 4), the 1st neighbor is (3, 5), the

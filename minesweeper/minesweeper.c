@@ -1,17 +1,19 @@
-#include "minesweeper.h"
+#include "include/minesweeper.h"
 
-void InitGame(MinesweeperGame *game)
+void InitGame(MinesweeperGame *game, INDEX_T width, INDEX_T height)
 {
-    game->mines = CreateBoard(game->width, game->height);
-    game->flags = CreateBoard(game->width, game->height);
-    game->numbers = CreateBoard(game->width, game->height);
-    game->revealed = CreateBoard(game->width, game->height);
-    game->amountCells = game->width * game->height;
+    game->width = width;
+    game->height = height;
+    game->amountCells = width * height;
+    game->mines = CreateBoard(width, height);
+    game->flags = CreateBoard(width, height);
+    game->numbers = CreateBoard(width, height);
+    game->revealed = CreateBoard(width, height);
     game->alive = false;
     game->startTime = (time_t)0;
 }
 
-void GenerateMines(MinesweeperGame *game, INDEX_T amount)
+void GenerateMines(MinesweeperGame *game, int (*rngGen)(int, int), INDEX_T amount)
 {
     if (amount >= game->amountCells)
         amount = game->amountCells;
@@ -21,8 +23,8 @@ void GenerateMines(MinesweeperGame *game, INDEX_T amount)
     while (currentAmountMines < amount)
     {
         Point minePoint = {
-            .x = GetRandomValue(0, game->width),
-            .y = GetRandomValue(0, game->height),
+            .x = rngGen(0, game->width - 1),
+            .y = rngGen(0, game->height - 1),
         };
         if (MarkBoardAtPoint(&(game->mines), minePoint))
         {
@@ -35,8 +37,8 @@ void GenerateMines(MinesweeperGame *game, INDEX_T amount)
     //     Point minePoint;
     //     while (!validPoint)
     //     {
-    //         minePoint.x = GetRandomValue(0, game->width);
-    //         minePoint.y = GetRandomValue(0, game->height);
+    //         minePoint.x = rngGen(0, game->width);
+    //         minePoint.y = rngGen(0, game->height);
     //         validPoint = !IsBoardMarkedAtPoint(&(game->mines), minePoint);
     //     }
     //     MarkBoardAtPoint(&(game->mines), minePoint);
@@ -63,11 +65,11 @@ void UpdateNumbers(MinesweeperGame *game)
     }
 }
 
-bool StartGame(MinesweeperGame *game, INDEX_T amountMines, Point startPoint)
+bool StartGame(MinesweeperGame *game, int (*rngGen)(int, int), INDEX_T amountMines, Point startPoint)
 {
-    if (IS_POINT_IN_BOARD(game, startPoint))
+    if (IsPointInBoard(&(game->revealed), startPoint))
     {
-        GenerateMines(game, amountMines);
+        GenerateMines(game, rngGen, amountMines);
         
         // Ensures no neighbors of `startPoint` are mines.
         // This is to allow for easier openings.
@@ -89,6 +91,7 @@ bool StartGame(MinesweeperGame *game, INDEX_T amountMines, Point startPoint)
         UpdateNumbers(game);
 
         game->startTime = clock();
+        return true;
     }
     return false;
 }
@@ -96,4 +99,16 @@ bool StartGame(MinesweeperGame *game, INDEX_T amountMines, Point startPoint)
 bool HasWonGame(const MinesweeperGame *game)
 {
     return (game->amountCells - game->mines.amountMarked) == game->revealed.amountMarked;
+}
+
+void FreeGame(MinesweeperGame *game)
+{
+    if (game != NULL)
+    {
+        FreeBoard(&(game->mines));
+        FreeBoard(&(game->flags));
+        FreeBoard(&(game->numbers));
+        FreeBoard(&(game->revealed));
+        free(game);
+    }
 }
