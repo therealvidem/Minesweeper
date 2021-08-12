@@ -3,4 +3,5 @@ add_library(
     board.c
     minesweeper.c
     point.c
+    point_queue.c
 )
