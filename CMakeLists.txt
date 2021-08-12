@@ -4,7 +4,7 @@ project(
     VERSION 0.1.0
 )
 
-find_package(raylib CONFIG REQUIRED)
+find_package(raylib 3.5 REQUIRED)
 
 set(CMAKE_C_STANDARD 17)
 
