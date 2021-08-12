@@ -30,6 +30,7 @@ int main(void)
 
     Image titleIcon = LoadImage("assets/icon.dds");
     SetWindowIcon(titleIcon);
+    UnloadImage(titleIcon);
 
     Textures textures = {
         .boardTilset = LoadTexture("assets/tileset.png"),
@@ -110,7 +111,7 @@ int main(void)
         if (HasWonGame(gameStruct.game) && gameStruct.gameState != GS_WON)
         {
             gameStruct.gameState = GS_WON;
-            FillBoard(&(gameStruct.game->opened), (ARRAY_T)true);
+            FillBoard(gameStruct.game->opened, (ARRAY_T)true);
         }
 
         //----------------------------------------------------------------------------------
@@ -127,7 +128,7 @@ int main(void)
         case GS_INITIAL:
             {
                 DrawBoard(
-                    &(gameStruct.game->numbers),
+                    gameStruct.game->numbers,
                     &textures,
                     numbersTiles,
                     NUM_NUMBERS + 1,
@@ -136,7 +137,7 @@ int main(void)
                 );
 
                 DrawMarkedBoard(
-                    &(gameStruct.game->opened),
+                    gameStruct.game->opened,
                     &textures,
                     BT_CLOSED,
                     BT_NOTHING,
@@ -145,7 +146,7 @@ int main(void)
                 );
 
                 DrawBoard(
-                    &(gameStruct.game->flags),
+                    gameStruct.game->flags,
                     &textures,
                     flagsTiles,
                     NUM_FLAGS + 1,
@@ -156,7 +157,7 @@ int main(void)
         case GS_DEAD:
             {
                 DrawBoard(
-                    &(gameStruct.game->numbers),
+                    gameStruct.game->numbers,
                     &textures,
                     numbersTiles,
                     NUM_NUMBERS + 1,
@@ -165,7 +166,7 @@ int main(void)
                 );
 
                 // DrawBoard(
-                //     &(gameStruct.game->flags),
+                //     gameStruct.game->flags,
                 //     &textures,
                 //     flagsTiles,
                 //     NUM_FLAGS + 1,
@@ -174,7 +175,7 @@ int main(void)
                 // );
 
                 DrawMarkedBoard(
-                    &(gameStruct.game->mines),
+                    gameStruct.game->mines,
                     &textures,
                     BT_NOTHING,
                     BT_MINE,
@@ -201,7 +202,7 @@ int main(void)
         case GS_WON:
             {
                DrawBoard(
-                    &(gameStruct.game->numbers),
+                    gameStruct.game->numbers,
                     &textures,
                     numbersTiles,
                     NUM_NUMBERS + 1,
@@ -210,7 +211,7 @@ int main(void)
                 );
 
                 DrawMarkedBoard(
-                    &(gameStruct.game->opened),
+                    gameStruct.game->opened,
                     &textures,
                     BT_CLOSED,
                     BT_NOTHING,
@@ -219,7 +220,7 @@ int main(void)
                 );
 
                 // DrawBoard(
-                //     &(gameStruct.game->flags),
+                //     gameStruct.game->flags,
                 //     &textures,
                 //     flagsTiles,
                 //     NUM_FLAGS + 1,
@@ -228,7 +229,7 @@ int main(void)
                 // );
 
                 DrawMarkedBoard(
-                    &(gameStruct.game->mines),
+                    gameStruct.game->mines,
                     &textures,
                     BT_NOTHING,
                     BT_MINE,
@@ -259,10 +260,13 @@ int main(void)
         EndDrawing();
         //----------------------------------------------------------------------------------
     }
-
-    UnloadImage(titleIcon);
-    UnloadTexture(textures.boardTilset);
+    
     FreeGame(gameStruct.game);
+
+    // Ironically, this results in a segmentation fault.
+    // UnloadImage(titleIcon);
+    
+    UnloadTexture(textures.boardTilset);
 
     CloseWindow();
 

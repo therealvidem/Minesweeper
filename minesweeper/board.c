@@ -14,18 +14,18 @@ bool IsPointInBoard(const Board *board, Point point)
     return InBounds(point, board->width, board->height);
 }
 
-Board CreateBoard(INDEX_T width, INDEX_T height)
+Board *CreateBoard(INDEX_T width, INDEX_T height)
 {
     size_t array_size = sizeof(ARRAY_T) * width * height;
     ARRAY_T *arr = (ARRAY_T *)malloc(array_size);
     memset(arr, 0, array_size);
-    return (Board){
-        ._arr = arr,
-        .width = width,
-        .height = height,
-        .amountCells = width * height,
-        .amountMarked = 0,
-    };
+    Board *newBoard = malloc(sizeof(Board));
+    newBoard->_arr = arr;
+    newBoard->width = width;
+    newBoard->height = height;
+    newBoard->amountCells = width * height;
+    newBoard->amountMarked = 0;
+    return newBoard;
 }
 
 INDEX_T GetIndexFromPoint(const Board *board, Point point)
@@ -150,5 +150,8 @@ void ClearBoard(Board *board)
 void FreeBoard(Board *board)
 {
     if (board != NULL)
+    {
+        free(board->_arr);
         free(board);
+    }
 }

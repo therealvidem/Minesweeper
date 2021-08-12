@@ -8,10 +8,10 @@
 
 typedef struct
 {
-    Board mines;
-    Board flags;
-    Board numbers;
-    Board opened;
+    Board *mines;
+    Board *flags;
+    Board *numbers;
+    Board *opened;
     time_t startTime;
 
     INDEX_T width;

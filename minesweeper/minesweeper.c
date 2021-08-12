@@ -23,27 +23,27 @@ Point GetRandomPoint(MinesweeperGame *game, int (*rng)(int, int))
 
 bool IsPointMine(MinesweeperGame *game, Point point)
 {
-    return IsBoardMarkedAtPoint(&(game->mines), point);
+    return IsBoardMarkedAtPoint(game->mines, point);
 }
 
 bool IsPointFlag(MinesweeperGame *game, Point point)
 {
-    return IsBoardMarkedAtPoint(&(game->flags), point);
+    return IsBoardMarkedAtPoint(game->flags, point);
 }
 
 bool IsPointNumbered(MinesweeperGame *game, Point point)
 {
-    return GetValueAtPoint(&(game->numbers), point) != 0;
+    return GetValueAtPoint(game->numbers, point) != 0;
 }
 
 bool IsPointEmpty(MinesweeperGame *game, Point point)
 {
-    return !IsBoardMarkedAtPoint(&(game->numbers), point);
+    return !IsBoardMarkedAtPoint(game->numbers, point);
 }
 
 bool IsPointOpen(MinesweeperGame *game, Point point)
 {
-    return IsBoardMarkedAtPoint(&(game->opened), point);
+    return IsBoardMarkedAtPoint(game->opened, point);
 }
 
 void GenerateMines(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amount)
@@ -56,7 +56,7 @@ void GenerateMines(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amount)
     while (currentAmountMines < amount)
     {
         Point minePoint = GetRandomPoint(game, rng);
-        if (MarkBoardAtPoint(&(game->mines), minePoint))
+        if (MarkBoardAtPoint(game->mines, minePoint))
         {
             currentAmountMines++;
         }
@@ -71,7 +71,7 @@ void GenerateMines(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amount)
     //         minePoint.y = rng(0, game->height);
     //         validPoint = !IsPointFlag(game, minePoint);
     //     }
-    //     MarkBoardAtPoint(&(game->mines), minePoint);
+    //     MarkBoardAtPoint(game->mines, minePoint);
     // }
 }
 
@@ -81,23 +81,23 @@ void UpdateNumbers(MinesweeperGame *game)
 {
     for (INDEX_T i = 0; i < game->amountCells; i++)
     {
-        Point point = GetPointFromIndex(&(game->numbers), i);
+        Point point = GetPointFromIndex(game->numbers, i);
         INDEX_T numMines = 0;
         for (INDEX_T neighborIndex = 0; neighborIndex < numNeighbors; neighborIndex++)
         {
             Point neighborPoint = GET_NEIGHBOR_POINT(point, neighborIndex);
-            if (IsBoardMarkedAtPoint(&(game->mines), neighborPoint))
+            if (IsBoardMarkedAtPoint(game->mines, neighborPoint))
             {
                 numMines++;
             }
         }
-        SetValueAtPoint(&(game->numbers), point, numMines);
+        SetValueAtPoint(game->numbers, point, numMines);
     }
 }
 
 void ReplaceMine(MinesweeperGame *game, int (*rng)(int, int), Point originalPoint, Point startPoint)
 {
-    UnmarkBoardAtPoint(&(game->mines), originalPoint);
+    UnmarkBoardAtPoint(game->mines, originalPoint);
                     
     // Places the mine at another point, ensuring that the new
     // point is not a neighbor of `startPoint` again.
@@ -109,12 +109,12 @@ void ReplaceMine(MinesweeperGame *game, int (*rng)(int, int), Point originalPoin
         newPoint = GetRandomPoint(game, rng);
         validNewPoint = !ArePointNeighbors(newPoint, startPoint) && !IsPointMine(game, newPoint);
     }
-    MarkBoardAtPoint(&(game->mines), newPoint);
+    MarkBoardAtPoint(game->mines, newPoint);
 }
 
 bool StartGame(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amountMines, Point startPoint)
 {
-    if (IsPointInBoard(&(game->opened), startPoint))
+    if (IsPointInBoard(game->opened, startPoint))
     {
         GenerateMines(game, rng, amountMines);
         
@@ -124,7 +124,7 @@ bool StartGame(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amountMines,
         for (INDEX_T neighborIndex = 0; neighborIndex < numNeighbors; neighborIndex++)
         {
             Point neighborPoint = GET_NEIGHBOR_POINT(startPoint, neighborIndex);
-            if (IsPointInBoard(&(game->mines), neighborPoint))
+            if (IsPointInBoard(game->mines, neighborPoint))
             {
                 if (IsPointMine(game, neighborPoint))
                 {
@@ -133,7 +133,7 @@ bool StartGame(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amountMines,
 
                 // if (!IsPointFlag(game, neighborPoint))
                 // {
-                //     MarkBoardAtPoint(&(game->opened), neighborPoint);
+                //     MarkBoardAtPoint(game->opened, neighborPoint);
                 // }
             }
         }
@@ -142,7 +142,7 @@ bool StartGame(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amountMines,
         {
             ReplaceMine(game, rng, startPoint, startPoint);
         }
-        // MarkBoardAtPoint(&(game->opened), startPoint);
+        // MarkBoardAtPoint(game->opened, startPoint);
 
         UpdateNumbers(game);
 
@@ -179,10 +179,10 @@ CellReturnStatus OpenSingleCell(MinesweeperGame *game, Point point)
     }
     else
     {
-        cellTypeOpened = GetValueAtPoint(&(game->numbers), point);
+        cellTypeOpened = GetValueAtPoint(game->numbers, point);
     }
 
-    MarkBoardAtPoint(&(game->opened), point);
+    MarkBoardAtPoint(game->opened, point);
     return cellTypeOpened;
 }
 
@@ -205,7 +205,7 @@ CellReturnStatus IterateFloodFiller(FloodFiller *ff)
     {
         // TODO: FIX FLOOD FILLER
         Point pointToOpen = DequeuePointQueue(ff->queue);
-        bool isInBoard = IsPointInBoard(&(ff->game->opened), pointToOpen);
+        bool isInBoard = IsPointInBoard(ff->game->opened, pointToOpen);
         bool isOpen = IsPointOpen(ff->game, pointToOpen);
         bool isFlag = IsPointFlag(ff->game, pointToOpen);
         bool isMine = IsPointMine(ff->game, pointToOpen);
@@ -237,43 +237,44 @@ CellReturnStatus FlagCell(MinesweeperGame *game, Point point)
 {
     if (!IsPointOpen(game, point))
     {
-        switch (GetValueAtPoint(&(game->flags), point))
+        switch (GetValueAtPoint(game->flags, point))
         {
         // Closed -> Flagged
         case 0:
             {
-                SetValueAtPoint(&(game->flags), point, 1);
+                SetValueAtPoint(game->flags, point, 1);
                 return CRS_FLAG;
             }
         // Flagged -> Questioned
         case 1:
             {
-                SetValueAtPoint(&(game->flags), point, 2);
+                SetValueAtPoint(game->flags, point, 2);
                 return CRS_QUESTION;
             }
         // Questioned -> Closed
         case 2:
             {
-                SetValueAtPoint(&(game->flags), point, 0);
+                SetValueAtPoint(game->flags, point, 0);
                 return CRS_CLOSED;
             }
         default:
-            return CRS_FAILED;
+            break;
         }
     }
+    return CRS_FAILED;
 }
 
 bool HasWonGame(const MinesweeperGame *game)
 {
-    return (game->amountCells - game->mines.amountMarked) == game->opened.amountMarked;
+    return (game->amountCells - game->mines->amountMarked) == game->opened->amountMarked;
 }
 
 void ResetGame(MinesweeperGame *game)
 {
-    ClearBoard(&(game->mines));
-    ClearBoard(&(game->flags));
-    ClearBoard(&(game->numbers));
-    ClearBoard(&(game->opened));
+    ClearBoard(game->mines);
+    ClearBoard(game->flags);
+    ClearBoard(game->numbers);
+    ClearBoard(game->opened);
     game->startTime = (time_t)0;
 }
 
@@ -281,10 +282,10 @@ void FreeGame(MinesweeperGame *game)
 {
     if (game != NULL)
     {
-        FreeBoard(&(game->mines));
-        FreeBoard(&(game->flags));
-        FreeBoard(&(game->numbers));
-        FreeBoard(&(game->opened));
+        FreeBoard(game->mines);
+        FreeBoard(game->flags);
+        FreeBoard(game->numbers);
+        FreeBoard(game->opened);
         free(game);
     }
 }

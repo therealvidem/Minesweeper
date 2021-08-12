@@ -42,9 +42,9 @@ bool IsIndexInBoard(const Board *board, INDEX_T index);
 // Checks if the `point` is within the bounds of the board array.
 bool IsPointInBoard(const Board *board, Point point);
 
-// Creates a board and also dynamically allocates the board array.
+// Allocates a board and also allocates the board array.
 // This means the board should be disposed of (using `FreeBoard(board)`).
-Board CreateBoard(INDEX_T width, INDEX_T height);
+Board *CreateBoard(INDEX_T width, INDEX_T height);
 
 // Convert `point` from a 2D index to a 1D index for accessing the array.
 INDEX_T GetIndexFromPoint(const Board *board, Point point);

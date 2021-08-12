@@ -158,10 +158,10 @@ void HandleBoardInput(GameStruct *gameStruct)
     {
         for (INDEX_T i = 0; i < gameStruct->game->amountCells; i++)
         {
-            if (!IsBoardMarkedAtIndex(&(gameStruct->game->mines), i))
+            if (!IsBoardMarkedAtIndex(gameStruct->game->mines, i))
             {
-                UnmarkBoardAtIndex(&(gameStruct->game->flags), i);
-                MarkBoardAtIndex(&(gameStruct->game->opened), i);
+                UnmarkBoardAtIndex(gameStruct->game->flags, i);
+                MarkBoardAtIndex(gameStruct->game->opened, i);
             }
         }
     }
