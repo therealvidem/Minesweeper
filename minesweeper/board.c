@@ -1,8 +1,8 @@
 #include "include/board.h"
 
-const int neighborCellsX[] = {-1, 0, 1, 1, 1, 0, -1, -1};
-const int neighborCellsY[] = {-1, -1, -1, 0, 1, 1, 1, 0};
-const int numNeighbors = 8;
+const INDEX_T neighborCellsX[] = {-1, 0, 1, 1, 1, 0, -1, -1};
+const INDEX_T neighborCellsY[] = {-1, -1, -1, 0, 1, 1, 1, 0};
+const INDEX_T numNeighbors = 8;
 
 bool IsIndexInBoard(const Board *board, INDEX_T index)
 {
@@ -19,7 +19,13 @@ Board CreateBoard(INDEX_T width, INDEX_T height)
     size_t array_size = sizeof(ARRAY_T) * width * height;
     ARRAY_T *arr = (ARRAY_T *)malloc(array_size);
     memset(arr, 0, array_size);
-    return (Board){arr, width, height};
+    return (Board){
+        ._arr = arr,
+        .width = width,
+        .height = height,
+        .amountCells = width * height,
+        .amountMarked = 0,
+    };
 }
 
 INDEX_T GetIndexFromPoint(const Board *board, Point point)
@@ -85,8 +91,10 @@ bool IsBoardMarkedAtPoint(const Board *board, Point point)
 bool MarkBoardAtIndex(Board *board, INDEX_T index)
 {
     if (!IsBoardMarkedAtIndex(board, index))
+    {
         SetValueAtIndex(board, index, (ARRAY_T)true);
         return true;
+    }
     return false;
 }
 
@@ -112,6 +120,31 @@ bool UnmarkBoardAtPoint(Board *board, Point point)
     if (IsBoardMarkedAtPoint(board, point))
         return SetValueAtPoint(board, point, (ARRAY_T)false);
     return false;
+}
+
+void FillBoard(Board *board, ARRAY_T value)
+{
+    for (INDEX_T i = 0; i < board->amountCells; i++)
+    {
+        board->_arr[i] = value;
+    }
+    // Let this be a reminder that memset() works by filling each BYTE, not
+    // each 4 BYTES as the size of ARRAY_T is...
+    // size_t array_size = sizeof(ARRAY_T) * board->width * board->height;
+    // memset(board->_arr, value, array_size);
+    if (value != (ARRAY_T)false)
+    {
+        board->amountMarked = board->amountCells;
+    }
+    else
+    {
+        board->amountMarked = 0;
+    }
+}
+
+void ClearBoard(Board *board)
+{
+    FillBoard(board, (ARRAY_T)false);
 }
 
 void FreeBoard(Board *board)

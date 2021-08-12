@@ -6,9 +6,9 @@
 #include "types.h"
 #include "point.h"
 
-extern const int neighborCellsX[];
-extern const int neighborCellsY[];
-extern const int numNeighbors;
+extern const INDEX_T neighborCellsX[];
+extern const INDEX_T neighborCellsY[];
+extern const INDEX_T numNeighbors;
 // Gets the coordinates of the ith neighbor of `point` (from 0 to 7).
 // The order of the neighbors start at the top-left (when viewing top-left corner as x = 0, y = 0), then
 // goes clockwise. So, the 0th neighbor of (4, 5) is (3, 4), the 1st neighbor is (3, 5), the
@@ -21,10 +21,10 @@ extern const int numNeighbors;
 //   for (int i = 0; i < numNeighbors; i++)
 //   {
 //       Point neighborPoint = GET_NEIGHBOR_POINT(point, i);
-//       // can now do stuff like IsBoardMarkedAtPoint(board, neighborPoint)
+//       // can now do stuff like IsPointMine(board, neighborPoint)
 //   }
 //   ```
-#define GET_NEIGHBOR_POINT(point, i) { .x = point.x + neighborCellsX[i], .y = point.y + neighborCellsY[i] }
+#define GET_NEIGHBOR_POINT(point, i) (Point){ .x = point.x + neighborCellsX[i], .y = point.y + neighborCellsY[i] }
 
 typedef struct board
 {
@@ -32,6 +32,7 @@ typedef struct board
 
     INDEX_T width;
     INDEX_T height;
+    INDEX_T amountCells;
     INDEX_T amountMarked;
 } Board;
 
@@ -81,6 +82,13 @@ bool UnmarkBoardAtIndex(Board *board, INDEX_T index);
 
 // Returns true if the cell was (successfully) changed, false otherwise.
 bool UnmarkBoardAtPoint(Board *board, Point point);
+
+// Fills the board with the specified `value`.
+void FillBoard(Board *board, ARRAY_T value);
+
+// Clears the board of all its values and resets all of its fields.
+// Note: This does not deallocated `board`. Use FreeBoard() for that instead.
+void ClearBoard(Board *board);
 
 // Frees the `board` that was dynamically allocated.
 void FreeBoard(Board *board);

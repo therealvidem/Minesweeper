@@ -6,7 +6,7 @@ A simple Minesweeper game coded in C using [RayLib](https://www.raylib.com/).
 
 ## TODO
 
-- [ ] Implement the backend of basic game functionality.
+- [x] Implement the backend of basic game functionality.
 - [ ] Implement the frontend (UI) of basic game functionality.
 - [ ] Add some basic testing.
 - [ ] Implement the recursive algorithm for opening.

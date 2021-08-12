@@ -5,50 +5,113 @@ const Vector2 origin = {
     .y = 0,
 };
 
+Vector2 PointToDrawPosition(Point point, Vector2 offset, Vector2 scale, Vector2 boardTileSize)
+{
+    return (Vector2){
+        .x = offset.x + (float)(point.x)*(scale.x*(boardTileSize.x)),
+        .y = offset.y + (float)(point.y)*(scale.y*(boardTileSize.y)),
+    };
+}
+
+Rectangle GetDestRectFromPoint(Point point, Vector2 offset, Vector2 scale, Vector2 boardTileSize)
+{
+    return (Rectangle){
+        .x = offset.x + (float)(point.x)*(scale.x*(boardTileSize.x)),
+        .y = offset.y + (float)(point.y)*(scale.y*(boardTileSize.y)),
+        .width = scale.x*(boardTileSize.x),
+        .height = scale.y*(boardTileSize.y),
+    };
+}
+
 void DrawBoard(
     const Board *board,
     const Textures *textures,
-    BoardTile markedTile,
-    BoardTile unmarkedTile,
-    Vector2 position,
+    const BoardTile *tiles,
+    size_t numTiles,
+    Vector2 offset,
     Vector2 scale
 )
 {
     BoardTile tile;
     Point point;
-    Rectangle destRect;
-    INDEX_T amountCells = board->width * board->height;
-    for (INDEX_T i = 0; i < amountCells; i++)
+    ARRAY_T cellValue;
+    for (INDEX_T i = 0; i < board->amountCells; i++)
     {
-        tile = IsBoardMarkedAtIndex(board, i) ? markedTile : unmarkedTile;
         point = GetPointFromIndex(board, i);
-        destRect.x = position.x + (float)(point.x)*(scale.x*(textures->boardTileSize.x));
-        destRect.y = position.y + (float)(point.y)*(scale.y*(textures->boardTileSize.y));
-        destRect.width = scale.x*(textures->boardTileSize.x);
-        destRect.height = scale.y*(textures->boardTileSize.y);
+        cellValue = board->_arr[i];
+
+        if (cellValue < (int)numTiles)
+        {
+            tile = tiles[cellValue];
+        }
+        else
+        {
+            tile = tiles[0];
+        }
 
         DrawTexturePro(
             textures->boardTilset,
             textures->boardTileRecs[tile],
-            destRect,
+            GetDestRectFromPoint(point, offset, scale, textures->boardTileSize),
             origin,
             0.0f,
             WHITE
         );
-        // DrawRectangle(
-        //     destRect.x,
-        //     destRect.y,
-        //     destRect.width,
-        //     destRect.height,
-        //     RED
-        // );
     }
 }
 
-Vector2 GetBoardDrawSize(const Board *board, const Textures *textures, Vector2 scale)
+void DrawMarkedBoard(
+    const Board *board,
+    const Textures *textures,
+    BoardTile unmarkedTile,
+    BoardTile markedTile,
+    Vector2 offset,
+    Vector2 scale
+)
+{
+    BoardTile tiles[2] = { unmarkedTile, markedTile };
+    DrawBoard(
+        board,
+        textures,
+        tiles,
+        2,
+        offset,
+        scale
+    );
+    // BoardTile tile;
+    // Point point;
+    // for (INDEX_T i = 0; i < board->amountCells; i++)
+    // {
+    //     point = GetPointFromIndex(board, i);
+    //     tile = IsBoardMarkedAtIndex(board, i) ? markedTile : unmarkedTile;
+
+    //     DrawTexturePro(
+    //         textures->boardTilset,
+    //         textures->boardTileRecs[tile],
+    //         GetDestRectFromPoint(point, offset, scale, textures->boardTileSize),
+    //         origin,
+    //         0.0f,
+    //         WHITE
+    //     );
+    // }
+}
+
+void DrawCell(const Textures *textures, Point cellPoint, BoardTile cellTile, Vector2 offset, Vector2 scale)
+{
+    DrawTexturePro(
+        textures->boardTilset,
+        textures->boardTileRecs[cellTile],
+        GetDestRectFromPoint(cellPoint, offset, scale, textures->boardTileSize),
+        origin,
+        0.0f,
+        WHITE
+    );
+}
+
+Vector2 GetBoardDrawSize(INDEX_T boardWidth, INDEX_T boardHeight, const Textures *textures, Vector2 scale)
 {
     return (Vector2){
-        .x = (scale.x*((board->width)*(textures->boardTileSize.x))),
-        .y = (scale.y*((board->height)*(textures->boardTileSize.y))),
+        .x = (scale.x*(boardWidth*(textures->boardTileSize.x))),
+        .y = (scale.y*(boardHeight*(textures->boardTileSize.y))),
     };
 }
