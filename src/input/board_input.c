@@ -81,12 +81,6 @@ void HandleBoardInput(GameStruct *gameStruct)
         default:
             break;
         }
-#ifndef NDEBUG
-        TraceLog(LOG_DEBUG, "mines amountMarked: %d", gameStruct->game->mines.amountMarked);
-        TraceLog(LOG_DEBUG, "flags amountMarked: %d", gameStruct->game->flags.amountMarked);
-        TraceLog(LOG_DEBUG, "numbers amountMarked: %d", gameStruct->game->numbers.amountMarked);
-        TraceLog(LOG_DEBUG, "opened amountMarked: %d", gameStruct->game->opened.amountMarked);
-#endif
     }
     else if (IsMouseButtonReleased(MOUSE_RIGHT_BUTTON))
     {
@@ -103,24 +97,12 @@ void HandleBoardInput(GameStruct *gameStruct)
         default:
             break;
         }
-#ifndef NDEBUG
-        TraceLog(LOG_DEBUG, "mines amountMarked: %d", gameStruct->game->mines.amountMarked);
-        TraceLog(LOG_DEBUG, "flags amountMarked: %d", gameStruct->game->flags.amountMarked);
-        TraceLog(LOG_DEBUG, "numbers amountMarked: %d", gameStruct->game->numbers.amountMarked);
-        TraceLog(LOG_DEBUG, "opened amountMarked: %d", gameStruct->game->opened.amountMarked);
-#endif
     }
     // Restart the game
     else if (IsKeyPressed(KEY_R))
     {
         gameStruct->gameState = GS_INITIAL;
         ResetGame(gameStruct->game);
-#ifndef NDEBUG
-        TraceLog(LOG_DEBUG, "mines amountMarked: %d", gameStruct->game->mines.amountMarked);
-        TraceLog(LOG_DEBUG, "flags amountMarked: %d", gameStruct->game->flags.amountMarked);
-        TraceLog(LOG_DEBUG, "numbers amountMarked: %d", gameStruct->game->numbers.amountMarked);
-        TraceLog(LOG_DEBUG, "opened amountMarked: %d", gameStruct->game->opened.amountMarked);
-#endif
     }
 #ifndef NDEBUG
     // Win the game automatically
@@ -134,12 +116,6 @@ void HandleBoardInput(GameStruct *gameStruct)
                 MarkBoardAtIndex(&(gameStruct->game->opened), i);
             }
         }
-#ifndef NDEBUG
-        TraceLog(LOG_DEBUG, "mines amountMarked: %d", gameStruct->game->mines.amountMarked);
-        TraceLog(LOG_DEBUG, "flags amountMarked: %d", gameStruct->game->flags.amountMarked);
-        TraceLog(LOG_DEBUG, "numbers amountMarked: %d", gameStruct->game->numbers.amountMarked);
-        TraceLog(LOG_DEBUG, "opened amountMarked: %d", gameStruct->game->opened.amountMarked);
-#endif
     }
 #endif
 }
