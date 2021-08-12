@@ -11,16 +11,7 @@ typedef struct
     INDEX_T y;
 } Point;
 
-// Represents the difference between two points.
-typedef struct
-{
-    int x;
-    int y;
-} PointDelta;
-
 bool InBounds(Point point, INDEX_T width, INDEX_T height);
-
-PointDelta GetPointDifference(Point lhs, Point rhs);
 
 // Determines if `p1` and `p2` are one step from each other, counting
 // diagonals as one step.

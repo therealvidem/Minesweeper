@@ -5,11 +5,12 @@ PointQueue *CreatePointQueue()
     PointQueue *newQueue = (PointQueue *)malloc(sizeof(PointQueue));
     newQueue->head = NULL;
     newQueue->tail = NULL;
+    return newQueue;
 }
 
 bool IsPointQueueEmpty(PointQueue *queue)
 {
-    return queue->head != NULL;
+    return queue->head == NULL;
 }
 
 void EnqueuePointQueue(PointQueue *queue, Point point)
@@ -19,7 +20,8 @@ void EnqueuePointQueue(PointQueue *queue, Point point)
         PointNode *newPointNode = malloc(sizeof(PointNode));
         newPointNode->next =  NULL;
         newPointNode->point = point;
-        queue->head = queue->tail = newPointNode;
+        queue->head = newPointNode;
+        queue->tail = newPointNode;
     }
     else
     {
@@ -31,7 +33,7 @@ void EnqueuePointQueue(PointQueue *queue, Point point)
     }
 }
 
-void DequeuePointQueue(PointQueue *queue, Point *outPoint)
+Point DequeuePointQueue(PointQueue *queue)
 {
 #ifndef NDEBUG
     assert(IsPointQueueEmpty(queue) == false);

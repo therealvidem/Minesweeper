@@ -31,7 +31,7 @@ void EnqueuePointQueue(PointQueue *queue, Point point);
 // Note: `queue` MUST NOT be empty in order to call this function,
 // otherwise it will fail. Check to make sure !IsPointQueueEmpty()
 // before using this function.
-void DequeuePointQueue(PointQueue *queue, Point *outPoint);
+Point DequeuePointQueue(PointQueue *queue);
 
 void FreePointQueue(PointQueue *queue);
 

@@ -20,8 +20,8 @@ int main(void)
     SetTraceLogLevel(LOG_DEBUG);
 #endif
 
-    const unsigned screenWidth = 600;
-    const unsigned screenHeight = 600;
+    const unsigned screenWidth = 720;
+    const unsigned screenHeight = 720;
     const unsigned boardWidth = 9;
     const unsigned boardHeight = 9;
     const unsigned amountMines = 10;
@@ -61,7 +61,7 @@ int main(void)
         BT_QUESTION,
     };
 
-    const Vector2 boardScale = { .x = 4.0f, .y = 4.0f };
+    const Vector2 boardScale = { .x = 5.f, .y = 5.f };
     const Vector2 boardDrawSize = GetBoardDrawSize(boardWidth, boardHeight, &textures, boardScale);
     const Vector2 boardOffset = {
         .x = screenWidth/2.f - boardDrawSize.x/2.f,

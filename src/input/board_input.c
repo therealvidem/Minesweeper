@@ -26,24 +26,68 @@ bool HandleLeftClickCell(GameStruct *gameStruct)
     Vector2 mousePosition = GetMousePosition();
     Point clickedPoint;
     bool foundPoint = GetPointFromPosition(gameStruct, mousePosition, &clickedPoint);
-    if (foundPoint && !IsPointFlag(gameStruct->game, clickedPoint))
+    if (foundPoint 
+     && !IsPointFlag(gameStruct->game, clickedPoint)
+     && !IsPointOpen(gameStruct->game, clickedPoint))
     {
-        CellType openedCellType = OpenSingleCell(gameStruct->game, clickedPoint);
+        if (IsPointEmpty(gameStruct->game, clickedPoint) && !IsPointMine(gameStruct->game, clickedPoint))
+        {
+            FloodFiller *ff = CreateFloodFiller(gameStruct->game, clickedPoint);
+    
 #ifndef NDEBUG
-        TraceLog(LOG_DEBUG, "Opened cell of type '%d'", openedCellType);
+            TraceLog(LOG_DEBUG, "Flood fill started");
 #endif
 
-        switch(openedCellType)
-        {
-        case CT_MINE:
+            bool opening = true;
+            while (opening)
             {
-                gameStruct->gameState = GS_DEAD;
-            } break;
-        default:
-            break;
-        }
+                CellReturnStatus openedCellType = IterateFloodFiller(ff);
+                switch (openedCellType)
+                {
+                case CRS_FLOODFILL_STOPPED:
+                    {
+                        opening = false;
+#ifndef NDEBUG
+                        TraceLog(LOG_DEBUG, "Flood fill stopped");
+#endif
+                        FreeFloodFiller(ff);
+                        ff = NULL;
+                    } break;
+                case CRS_MINE:
+                    {
+                        gameStruct->gameState = GS_DEAD;
+                        opening = false;
+                    } break;
+                default:
+                    {
 
-        gameStruct->lastOpenedPoint = clickedPoint;
+                    } break;
+                }
+            }
+
+            FreeFloodFiller(ff);
+            ff = NULL;
+        }
+        else
+        {
+            CellReturnStatus openedCellType = OpenSingleCell(gameStruct->game, clickedPoint);
+#ifndef NDEBUG
+            TraceLog(LOG_DEBUG, "Opened cell of type '%d'", openedCellType);
+#endif
+
+            switch(openedCellType)
+            {
+            case CRS_MINE:
+                {
+                    gameStruct->gameState = GS_DEAD;
+                } break;
+            default:
+                break;
+            }
+
+            gameStruct->lastOpenedPoint = clickedPoint;
+        }
+        
         return true;
     }
     return false;
@@ -68,10 +112,14 @@ void HandleBoardInput(GameStruct *gameStruct)
         {
         case GS_INITIAL:
             {
-                if (HandleLeftClickCell(gameStruct))
+                Vector2 mousePosition = GetMousePosition();
+                Point clickedPoint;
+                bool foundPoint = GetPointFromPosition(gameStruct, mousePosition, &clickedPoint);
+                if (foundPoint && !IsPointFlag(gameStruct->game, clickedPoint))
                 {
                     gameStruct->gameState = GS_ALIVE;
-                    StartGame(gameStruct->game, GetRandomValue, gameStruct->amountMines, gameStruct->lastOpenedPoint);
+                    StartGame(gameStruct->game, GetRandomValue, gameStruct->amountMines, clickedPoint);
+                    HandleLeftClickCell(gameStruct);
                 }
             } break;
         case GS_ALIVE:
