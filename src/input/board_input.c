@@ -154,7 +154,6 @@ void HandleMiddleClickCell(GameStruct *gameStruct)
                     } break;
                 case CRS_0:
                     {
-                        TraceLog(LOG_DEBUG, "Opened a 0 at (%d, %d), preparing to flood fill", gameStruct->lastOpenedPoint.x, gameStruct->lastOpenedPoint.y);
                         UnmarkBoardAtPoint(gameStruct->game->opened, gameStruct->lastOpenedPoint);
                         ExecuteFloodFill(gameStruct, gameStruct->lastOpenedPoint);
                     } break;
