@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #define ARRAY_T int
 #define INDEX_T size_t
