@@ -23,67 +23,62 @@ FILE *logFile;
 // From https://www.raylib.com/examples/web/core/loader.html?name=core_custom_logging
 // Custom logging funtion
 void CustomLog(int msgType, const char *text, va_list args)
-{
-    if (logFile == NULL)
-    {
-        logFile = stdout;
-    }
-    
+{   
     char timeStr[64] = { 0 };
     time_t now = time(NULL);
     struct tm *tm_info = localtime(&now);
 
     strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", tm_info);
+    printf("[%s] ", timeStr);
     if (logFile != NULL)
     {
-        printf("[%s] ", timeStr);
+        fprintf(logFile, "[%s] ", timeStr);
     }
-    fprintf(logFile, "[%s] ", timeStr);
 
     switch (msgType)
     {
         case LOG_INFO:
             {
-                fprintf(logFile, "[INFO] : ");
+                printf("[INFO] : ");
                 if (logFile != NULL)
                 {
-                    printf("[INFO] : ");
+                    fprintf(logFile, "[INFO] : ");
                 }
             } break;
         case LOG_ERROR:
             {
-                fprintf(logFile, "[ERROR] : ");
+                printf("[ERROR] : ");
                 if (logFile != NULL)
                 {
-                    printf("[ERROR] : ");
+                    fprintf(logFile, "[ERROR] : ");
                 }
             } break;
         case LOG_WARNING:
             {
-                fprintf(logFile, "[WARN] : ");
+                printf("[WARN] : ");
                 if (logFile != NULL)
                 {
-                    printf("[WARN] : ");
+                    fprintf(logFile, "[WARN] : ");
                 }
             } break;
         case LOG_DEBUG:
             {
-                fprintf(logFile, "[DEBUG] : ");
+                printf("[DEBUG] : ");
                 if (logFile != NULL)
                 {
-                    printf("[DEBUG] : ");
+                    fprintf(logFile, "[DEBUG] : ");
                 }
             } break;
         default: break;
     }
 
+    vprintf(text, args);
+    printf("\n");
     if (logFile != NULL)
     {
-        vprintf(text, args);
-        printf("\n");
+        vfprintf(logFile, text, args);
+        fprintf(logFile, "\n");
     }
-    vfprintf(logFile, text, args);
-    fprintf(logFile, "\n");
 }
 
 void DrawNumbers(GameStruct *gameStruct, BoardTile numbersTiles[NUM_NUMBERS + 1], Vector2 boardOffset, Vector2 boardScale)
@@ -203,7 +198,7 @@ int main(void)
         }
     }
 
-    BoardTile numbersTiles[NUM_NUMBERS + 1];
+    BoardTile numbersTiles[NUM_NUMBERS + 1] = { 0 };
     numbersTiles[0] = BT_OPENED;
     for (int i = 0; i < 8; i++)
     {
