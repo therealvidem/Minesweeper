@@ -46,7 +46,7 @@ If using VSCode, you can in use the following setting to make the CMake extensio
 
 ```json
 "cmake.configureSettings": {
-    "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    "CMAKE_TOOLCHAIN_FILE": "[your vcpkg location]/scripts/buildsystems/vcpkg.cmake"
 }
 ```
 
