@@ -32,7 +32,7 @@ if (NOT RAYLIB_FOUND) # If there's none, fetch and build raylib
 
 endif()
 
-set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD 11)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/minesweeper)
 
