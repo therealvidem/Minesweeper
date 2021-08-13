@@ -37,21 +37,28 @@ set(CMAKE_C_STANDARD 11)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/minesweeper)
 
 file(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+# Set icon for .exe
+if (MSVC)
+    list(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/icon.rc)
+endif ()
+
 add_executable(minesweeper_game ${SRC_FILES})
 
 if (MSVC)
-    target_compile_options(minesweeper_game PUBLIC $<$<CONFIG:Debug>:/W4 /WX>)
-    target_link_options(minesweeper_game PUBLIC $<$<CONFIG:Release>:/SUBSYSTEM:WINDOWS /ENTRY:main>)
-else()
-    target_compile_options(minesweeper_game PUBLIC $<$<CONFIG:Debug>:-Wall -Wextra -Wpedantic>)
-    target_link_options(minesweeper_game PUBLIC $<$<CONFIG:Release>:-mwindows>)
-endif()
+    target_compile_definitions(minesweeper_game PRIVATE _CRT_SECURE_NO_WARNINGS)
+    target_compile_options(minesweeper_game PRIVATE $<$<CONFIG:Debug>:/W4>)
+    target_link_options(minesweeper_game PRIVATE $<$<CONFIG:Release>:/SUBSYSTEM:WINDOWS /ENTRY:main>)
+else ()
+    target_compile_options(minesweeper_game PRIVATE $<$<CONFIG:Debug>:-Wall -Wextra -Wpedantic>)
+    target_link_options(minesweeper_game PRIVATE $<$<CONFIG:Release>:-mwindows>)
+endif ()
 
 target_include_directories(
     minesweeper_game PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/minesweeper/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics
     ${CMAKE_CURRENT_SOURCE_DIR}/src/input
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/utils
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
@@ -60,20 +67,20 @@ target_link_libraries(minesweeper_game minesweeper)
 target_include_directories(minesweeper_game PRIVATE ${RAYLIB_INCLUDE_DIR})
 if (RAYLIB_FOUND)
     target_link_libraries(minesweeper_game ${RAYLIB_LIBRARIES})
-else()
+else ()
     target_link_libraries(minesweeper_game raylib)
-endif()
+endif ()
 
 # Checks if OSX and links appropriate frameworks (Only required on MacOS)
 if (APPLE)
     target_link_libraries(minesweeper_game "-framework IOKit")
     target_link_libraries(minesweeper_game "-framework Cocoa")
     target_link_libraries(minesweeper_game "-framework OpenGL")
-endif()
+endif ()
 
 # https://stackoverflow.com/questions/49636737/cmake-set-default-resource-asset-directory
 set(source "${CMAKE_SOURCE_DIR}/assets")
-set(destination "${CMAKE_CURRENT_BINARY_DIR}/assets")
+set(destination "$<TARGET_FILE_DIR:minesweeper_game>/assets")
 add_custom_command(
     TARGET minesweeper_game POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E create_symlink ${source} ${destination} 
@@ -82,7 +89,7 @@ add_custom_command(
 )
 
 set(LOG_FILE_NAME "game.log")
-target_compile_definitions(minesweeper_game PUBLIC LOG_FILE_NAME="${LOG_FILE_NAME}")
+target_compile_definitions(minesweeper_game PRIVATE LOG_FILE_NAME="${LOG_FILE_NAME}")
 set_property(
     TARGET minesweeper_game
     APPEND

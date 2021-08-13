@@ -12,17 +12,13 @@
 
 #define BOARD_TILE_SET_SIZE 256
 #define BOARD_TILE_SIZE 16
+#define SCREEN_WIDTH 720
+#define SCREEN_HEIGHT 720
+#define BOARD_WIDTH 9
+#define BOARD_HEIGHT 9
+#define AMOUNT_MINES 10
 
-const unsigned screenWidth = 720;
-const unsigned screenHeight = 720;
-const unsigned boardWidth = 9;
-const unsigned boardHeight = 9;
-const unsigned amountMines = 10;
-const Vector2 boardScale = {
-    .x = (screenWidth/(float)boardWidth)/(BOARD_TILE_SIZE),
-    .y = (screenHeight/(float)boardHeight)/(BOARD_TILE_SIZE),
-};
-FILE *logFile = NULL;
+FILE *logFile;
 
 // From https://www.raylib.com/examples/web/core/loader.html?name=core_custom_logging
 // Custom logging funtion
@@ -154,8 +150,8 @@ void DrawTime(GameStruct *gameStruct)
     );
     DrawText(
         timeString,
-        screenWidth/2 - MeasureText(timeString, 16)/2,
-        screenHeight/2 + 16,
+        SCREEN_WIDTH/2 - MeasureText(timeString, 16)/2,
+        SCREEN_HEIGHT/2 + 16,
         16,
         WHITE
     );
@@ -163,7 +159,9 @@ void DrawTime(GameStruct *gameStruct)
 
 int main(void)
 {
-    srand(time(NULL));
+    logFile = NULL;
+
+    srand((unsigned)time(NULL));
 
 // #ifndef NDEBUG
     SetTraceLogLevel(LOG_DEBUG);
@@ -179,7 +177,7 @@ int main(void)
         SetTraceLogCallback(CustomLog);
     }
 
-    InitWindow(screenWidth, screenHeight, "Minesweeper");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Minesweeper");
 
     Image titleIcon = LoadImage("assets/icon.dds");
     SetWindowIcon(titleIcon);
@@ -198,7 +196,10 @@ int main(void)
             textures.boardTileRecs[currentTile].y = y;
             textures.boardTileRecs[currentTile].width = BOARD_TILE_SIZE;
             textures.boardTileRecs[currentTile].height = BOARD_TILE_SIZE;
-            currentTile++;
+            if (currentTile < NUM_BOARD_TILES)
+            {
+                currentTile++;
+            }
         }
     }
 
@@ -215,18 +216,22 @@ int main(void)
         BT_QUESTION,
     };
 
-    const Vector2 boardDrawSize = GetBoardDrawSize(boardWidth, boardHeight, &textures, boardScale);
+    const Vector2 boardScale = {
+        .x = (SCREEN_WIDTH/(float)BOARD_WIDTH)/(BOARD_TILE_SIZE),
+        .y = (SCREEN_HEIGHT/(float)BOARD_HEIGHT)/(BOARD_TILE_SIZE),
+    };
+    const Vector2 boardDrawSize = GetBoardDrawSize(BOARD_WIDTH, BOARD_HEIGHT, &textures, boardScale);
     const Vector2 boardOffset = {
-        .x = screenWidth/2.f - boardDrawSize.x/2.f,
-        .y = screenHeight/2.f - boardDrawSize.y/2.f,
+        .x = SCREEN_WIDTH/2.f - boardDrawSize.x/2.f,
+        .y = SCREEN_HEIGHT/2.f - boardDrawSize.y/2.f,
     };
 
     GameStruct gameStruct = (GameStruct){
         .game = (MinesweeperGame *)malloc(sizeof(MinesweeperGame)),
         .gameState = GS_INITIAL,
-        .textures = &textures,
+        .textures = NULL,
 
-        .amountMines = amountMines,
+        .amountMines = AMOUNT_MINES,
         .boardScale = boardScale,
         .boardDrawSize = boardDrawSize,
         .boardOffset = boardOffset,
@@ -236,8 +241,9 @@ int main(void)
         .startTime = (struct timespec){0},
         .endTime = (struct timespec){0},
     };
+    gameStruct.textures = &textures;
 
-    InitGame(gameStruct.game, boardWidth, boardHeight);
+    InitGame(gameStruct.game, BOARD_WIDTH, BOARD_HEIGHT);
 
     SetTargetFPS(60);
 
@@ -260,7 +266,7 @@ int main(void)
                 wonTextHueValue = 0.f;
             }
             wonTextPosX = wonTextPosX + 200.f * GetFrameTime();
-            if (wonTextPosX > (float)(screenWidth + MeasureText("You Won!", 32)))
+            if (wonTextPosX > (float)(SCREEN_WIDTH + MeasureText("You Won!", 32)))
             {
                 wonTextPosX = (float)(-MeasureText("You Won!", 32));
             }
@@ -303,12 +309,12 @@ int main(void)
                     boardScale
                 );
 
-                DrawRectangle(0, 0, screenWidth, screenHeight, ColorAlpha(BLACK, 0.5f));
+                DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ColorAlpha(BLACK, 0.5f));
 
                 DrawText(
                     "Game Over!",
-                    screenWidth/2 - MeasureText("Game Over!", 32)/2,
-                    screenHeight/2 - 32,
+                    SCREEN_WIDTH/2 - MeasureText("Game Over!", 32)/2,
+                    SCREEN_HEIGHT/2 - 32,
                     32,
                     WHITE
                 );
@@ -317,8 +323,8 @@ int main(void)
 
                 DrawText(
                     "Press 'r' to restart",
-                    screenWidth/2 - MeasureText("Press 'r' to restart", 16)/2,
-                    screenHeight/2 + 48,
+                    SCREEN_WIDTH/2 - MeasureText("Press 'r' to restart", 16)/2,
+                    SCREEN_HEIGHT/2 + 48,
                     16,
                     WHITE
                 );
@@ -329,12 +335,12 @@ int main(void)
                 DrawOpened(&gameStruct, boardOffset, boardScale);
                 DrawFlags(&gameStruct, flagsTiles, boardOffset, boardScale);
 
-                DrawRectangle(0, 0, screenWidth, screenHeight, ColorAlpha(BLACK, 0.5f));
+                DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, ColorAlpha(BLACK, 0.5f));
 
                 DrawText(
                     "You Won!",
-                    wonTextPosX,
-                    screenHeight/2 - 32,
+                    (int)wonTextPosX,
+                    SCREEN_HEIGHT/2 - 32,
                     32,
                     ColorFromHSV(wonTextHueValue, 1.f, 1.f)
                 );
@@ -343,8 +349,8 @@ int main(void)
 
                 DrawText(
                     "Press 'r' to restart",
-                    screenWidth/2 - MeasureText("Press 'r' to restart", 16)/2,
-                    screenHeight/2 + 48,
+                    SCREEN_WIDTH/2 - MeasureText("Press 'r' to restart", 16)/2,
+                    SCREEN_HEIGHT/2 + 48,
                     16,
                     WHITE
                 );

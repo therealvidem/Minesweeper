@@ -11,12 +11,18 @@ void OnGameStateChange(GameStruct *gameStruct, GameState oldState, GameState new
 {
     if (newState == GS_ALIVE)
     {
-        clock_gettime(CLOCK_MONOTONIC, &(gameStruct->startTime));
+        if (!gettime(&(gameStruct->startTime)))
+        {
+            TraceLog(LOG_WARNING, "Could not set the time using gettime()");
+        }
     }
 
     if (newState == GS_DEAD || newState == GS_WON)
     {
-        clock_gettime(CLOCK_MONOTONIC, &(gameStruct->endTime));
+        if (!gettime(&(gameStruct->endTime)))
+        {
+            TraceLog(LOG_WARNING, "Could not set the time using gettime()");
+        }
     }
 
     if (newState == GS_WON)

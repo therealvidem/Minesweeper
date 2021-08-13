@@ -22,7 +22,7 @@ typedef enum
     BT_OPENED_QUESTION,
     BT_NOTHING,
 } BoardTile;
-#define NUM_BOARD_TILES (BT_OPENED_QUESTION - BT_CLOSED) + 1
+#define NUM_BOARD_TILES ((BT_NOTHING - BT_CLOSED) + 1)
 
 typedef struct
 {

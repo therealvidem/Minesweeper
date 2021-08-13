@@ -1,7 +1,7 @@
 #ifndef STATE_HANDLER_H
 #define STATE_HANDLER_H
 
-#include <time.h>
+#include "utils/time_utils.h"
 #include "game_struct.h"
 
 void ChangeGameState(GameStruct *gameStruct, GameState newState);
