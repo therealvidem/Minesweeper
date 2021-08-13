@@ -139,6 +139,7 @@ int main(void)
         .boardDrawSize = boardDrawSize,
         .boardOffset = boardOffset,
         .lastOpenedPoint = (Point){ 0, 0 },
+        .mineHitPoint = (Point){ 0, 0 },
         .startTime = (struct timeval){0},
         .endTime = (struct timeval){0},
     };

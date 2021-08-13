@@ -13,6 +13,11 @@ bool IsPointQueueEmpty(PointQueue *queue)
     return queue->head == NULL;
 }
 
+Point PeekPointQueue(PointQueue *queue)
+{
+    return queue->head->point;
+}
+
 void EnqueuePointQueue(PointQueue *queue, Point point)
 {
     if (queue->head == NULL)

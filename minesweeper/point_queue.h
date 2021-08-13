@@ -26,6 +26,12 @@ PointQueue *CreatePointQueue();
 // Returns true if `queue` has no elements, false otherwise.
 bool IsPointQueueEmpty(PointQueue *queue);
 
+// Note: `queue` MUST NOT be empty in order to call this function,
+// otherwise it will fail. Check to make sure !IsPointQueueEmpty()
+// before using this function.
+// Returns the point at the front of the queue.
+Point PeekPointQueue(PointQueue *queue);
+
 void EnqueuePointQueue(PointQueue *queue, Point point);
 
 // Note: `queue` MUST NOT be empty in order to call this function,

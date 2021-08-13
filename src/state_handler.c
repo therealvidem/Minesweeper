@@ -18,4 +18,16 @@ void OnGameStateChange(GameStruct *gameStruct, GameState oldState, GameState new
     {
         gettimeofday(&(gameStruct->endTime), 0);
     }
+
+    if (newState == GS_WON)
+    {
+        // Set all mines to flags
+        for (INDEX_T i = 0; i < gameStruct->game->amountCells; i++)
+        {
+            if (IsBoardMarkedAtIndex(gameStruct->game->mines, i))
+            {
+                MarkBoardAtIndex(gameStruct->game->flags, i);
+            }
+        }
+    }
 }

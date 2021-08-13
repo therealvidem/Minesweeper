@@ -11,6 +11,9 @@
 // Returns true if a point was found, otherwise false.
 Point GetNearestPoint(GameStruct *gameStruct, Vector2 position, Point *outPoint);
 
+// Executes a flood fill at `point`.
+void ExecuteFloodFill(GameStruct *gameStruct, Point point);
+
 // Handles the left-clicking portion of `HandleBoardInput` for various
 // actions, such as opening a cell.
 // Note: If the mouse clicked on a valid point, then this sets
@@ -22,6 +25,10 @@ bool HandleLeftClickCell(GameStruct *gameStruct);
 // Handles the left-clicking portion of `HandleBoardInput` for various
 // actions, primarily the flagging of cells.
 void HandleRightClickCell(GameStruct *gameStruct);
+
+// Handles the middle-clicking portion of `HandleBoardInput`.
+// This is primarily for handling chording.
+void HandleMiddleClickCell(GameStruct *gameStruct);
 
 // Handles input relating to the board, primarily the clicking of cells.
 void HandleBoardInput(GameStruct *gameStruct);

@@ -16,7 +16,7 @@
 // it will just return the correspoding cell type that was successfully opened.
 typedef enum
 {
-    CRS_FLOODFILL_STOPPED = -2,
+    CRS_OPEN_QUEUE_STOPPED = -2,
     CRS_FAILED = -1,
     CRS_0 = 0,
     CRS_1 = 1,
@@ -27,7 +27,6 @@ typedef enum
     CRS_6 = 6,
     CRS_7 = 7,
     CRS_8 = 8,
-    CRS_EMPTY,
     CRS_MINE,
     CRS_CLOSED,
     CRS_FLAG,

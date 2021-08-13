@@ -28,6 +28,7 @@ typedef struct
 
     GameState gameState;
     Point lastOpenedPoint;
+    Point mineHitPoint;
     struct timeval startTime;
     struct timeval endTime;
 } GameStruct;

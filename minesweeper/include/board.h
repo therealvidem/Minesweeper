@@ -52,8 +52,8 @@ INDEX_T GetIndexFromPoint(const Board *board, Point point);
 // Convert `index` from a 1D index to a 2D point.
 Point GetPointFromIndex(const Board *board, INDEX_T index);
 
-// Also checks that the point is within bounds of the board array.
-// Returns true if successfully set, false otherwise.
+// Note: This does not check bounds.
+// Returns the value at a `point` in the board.
 ARRAY_T GetValueAtPoint(const Board *board, Point point);
 
 // Does *not* check that the index is within bounds of the board array.

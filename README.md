@@ -10,7 +10,7 @@ A simple Minesweeper game coded in C using [RayLib](https://www.raylib.com/).
 - [x] Implement the frontend (UI) of basic game functionality.
 - [ ] Add some basic testing.
 - [x] Implement the flood fill algorithm for opening empty cells.
-- [ ] Implement chording.
+- [x] Implement chording.
 - [ ] Add info texts, such as number of mines and a timer.
 - [ ] Add end screen.
 - [ ] Implement menu functionality.

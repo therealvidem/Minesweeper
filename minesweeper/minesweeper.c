@@ -144,18 +144,18 @@ bool StartGame(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amountMines,
 
         UpdateNumbers(game);
 
-        // FloodFiller *ff = CreateFloodFiller(game, startPoint);
+        // CellOpeningQueue *openQueue = CreateCellOpeningQueue(game, startPoint);
 
         // bool opening = true;
         // while (opening)
         // {
-        //     if (IterateFloodFiller(ff) == CRS_FLOODFILL_STOPPED)
+        //     if (IterateFloodFiller(ff) == CRS_OPEN_QUEUE_STOPPED)
         //     {
         //         opening = false;
         //     }
         // }
 
-        // FreeFloodFiller(ff);
+        // FreeCellOpeningQueue(ff);
         return true;
     }
     return false;
@@ -175,31 +175,30 @@ CellReturnStatus OpenSingleCell(MinesweeperGame *game, Point point)
     }
     else
     {
-        cellTypeOpened = GetValueAtPoint(game->numbers, point);
+        cellTypeOpened = CRS_0 + GetValueAtPoint(game->numbers, point);
     }
 
     MarkBoardAtPoint(game->opened, point);
     return cellTypeOpened;
 }
 
-FloodFiller *CreateFloodFiller(MinesweeperGame *game, Point startPoint)
+CellOpeningQueue *CreateCellOpeningQueue(MinesweeperGame *game, Point startPoint)
 {
-    FloodFiller *ff = (FloodFiller *)malloc(sizeof(FloodFiller));
+    CellOpeningQueue *newOpenQueue = (CellOpeningQueue *)malloc(sizeof(CellOpeningQueue));
     PointQueue *queue = CreatePointQueue();
-    ff->game = game;
-    ff->startPoint = startPoint;
-    ff->queue = queue;
-    ff->currentIteration = 0;
+    newOpenQueue->game = game;
+    newOpenQueue->startPoint = startPoint;
+    newOpenQueue->queue = queue;
+    newOpenQueue->currentIteration = 0;
 
     EnqueuePointQueue(queue, startPoint);
-    return ff;
+    return newOpenQueue;
 }
 
-CellReturnStatus IterateFloodFiller(FloodFiller *ff)
+CellReturnStatus IterateFloodFiller(CellOpeningQueue *ff)
 {
     if (!IsPointQueueEmpty(ff->queue))
     {
-        // TODO: FIX FLOOD FILLER
         Point pointToOpen = DequeuePointQueue(ff->queue);
         bool isInBoard = IsPointInBoard(ff->game->opened, pointToOpen);
         bool isOpen = IsPointOpen(ff->game, pointToOpen);
@@ -215,7 +214,10 @@ CellReturnStatus IterateFloodFiller(FloodFiller *ff)
                 for (INDEX_T neighborIndex = 0; neighborIndex < numNeighbors; neighborIndex++)
                 {
                     Point neighborPoint = GET_NEIGHBOR_POINT(pointToOpen, neighborIndex);
-                    EnqueuePointQueue(ff->queue, neighborPoint);
+                    if (IsPointInBoard(ff->game->opened, neighborPoint))
+                    {
+                        EnqueuePointQueue(ff->queue, neighborPoint);
+                    }
                 }
             }
 
@@ -226,7 +228,63 @@ CellReturnStatus IterateFloodFiller(FloodFiller *ff)
         
         return CRS_FAILED;
     }
-    return CRS_FLOODFILL_STOPPED;
+    return CRS_OPEN_QUEUE_STOPPED;
+}
+
+CellOpeningQueue *ChordCell(MinesweeperGame *game, Point startPoint)
+{
+    if (IsPointInBoard(game->numbers, startPoint) && IsPointNumbered(game, startPoint))
+    {
+        // First, check that there are exactly as many flags around the cell as the cell's value.
+        ARRAY_T cellNumber = GetValueAtPoint(game->numbers, startPoint);
+        ARRAY_T numFlags = 0;
+        for (INDEX_T neighborIndex = 0; neighborIndex < numNeighbors; neighborIndex++)
+        {
+            Point neighborPoint = GET_NEIGHBOR_POINT(startPoint, neighborIndex);
+            if (IsPointFlag(game, neighborPoint))
+            {
+                numFlags++;
+            }
+        }
+
+        if (cellNumber == numFlags)
+        {
+            CellOpeningQueue *openQueue = CreateCellOpeningQueue(game, startPoint);
+
+            for (INDEX_T neighborIndex = 0; neighborIndex < numNeighbors; neighborIndex++)
+            {
+                Point neighborPoint = GET_NEIGHBOR_POINT(startPoint, neighborIndex);
+                if (IsPointInBoard(game->numbers, neighborPoint))
+                {
+                    EnqueuePointQueue(openQueue->queue, neighborPoint);
+                }
+            }
+
+            return openQueue;
+        }
+    }
+    return NULL;
+}
+
+CellReturnStatus IterateChord(CellOpeningQueue *chordQueue)
+{
+    if (!IsPointQueueEmpty(chordQueue->queue))
+    {
+        Point pointToOpen = DequeuePointQueue(chordQueue->queue);
+        bool isInBoard = IsPointInBoard(chordQueue->game->opened, pointToOpen);
+        bool isOpen = IsPointOpen(chordQueue->game, pointToOpen);
+        bool isFlag = IsPointFlag(chordQueue->game, pointToOpen);
+
+        if (isInBoard && !isOpen && !isFlag)
+        {
+            CellReturnStatus openedCellType = OpenSingleCell(chordQueue->game, pointToOpen);
+            chordQueue->currentIteration++;
+            return openedCellType;
+        }
+        
+        return CRS_FAILED;
+    }
+    return CRS_OPEN_QUEUE_STOPPED;
 }
 
 CellReturnStatus FlagCell(MinesweeperGame *game, Point point)
@@ -285,11 +343,11 @@ void FreeGame(MinesweeperGame *game)
     }
 }
 
-void FreeFloodFiller(FloodFiller *ff)
+void FreeCellOpeningQueue(CellOpeningQueue *openQueue)
 {
-    if (ff != NULL)
+    if (openQueue != NULL)
     {
-        FreePointQueue(ff->queue);
-        free(ff);
+        FreePointQueue(openQueue->queue);
+        free(openQueue);
     }
 }
