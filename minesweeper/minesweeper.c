@@ -1,5 +1,4 @@
 #include "include/minesweeper.h"
-#include <stdio.h>
 
 void InitGame(MinesweeperGame *game, INDEX_T width, INDEX_T height)
 {
