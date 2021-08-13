@@ -54,7 +54,6 @@ target_include_directories(
 target_link_libraries(minesweeper_game minesweeper)
 
 target_include_directories(minesweeper_game PRIVATE ${RAYLIB_INCLUDE_DIR})
-message("library: ${RAYLIB_LIBRARIES}")
 if (RAYLIB_FOUND)
     target_link_libraries(minesweeper_game ${RAYLIB_LIBRARIES})
 else()
