@@ -43,7 +43,7 @@ if (MSCV)
     target_compile_options(minesweeper_game PUBLIC $<$<CONFIG:Debug>:/W4 /WX>)
     target_link_options(minesweeper_game PUBLIC $<$<CONFIG:Release>:/SUBSYSTEM:WINDOWS /ENTRY:main>)
 else()
-    target_compile_options(minesweeper_game PUBLIC $<$<CONFIG:Debug>:-Wall -Werror -Wextra -Wpedantic>)
+    target_compile_options(minesweeper_game PUBLIC $<$<CONFIG:Debug>:-Wall -Wextra -Wpedantic>)
     target_link_options(minesweeper_game PUBLIC $<$<CONFIG:Release>:-mwindows>)
 endif()
 
@@ -51,6 +51,8 @@ target_include_directories(
     minesweeper_game PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/minesweeper/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/input
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 target_link_libraries(minesweeper_game minesweeper)
