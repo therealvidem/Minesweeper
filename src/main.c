@@ -75,7 +75,7 @@ void DrawTime(GameStruct *gameStruct)
         screenWidth/2 - MeasureText(TextFormat("Time: %.4lfs", finalTime), 32)/2,
         screenHeight/2 + 16,
         32,
-        BLACK
+        WHITE
     );
 }
 
@@ -210,21 +210,33 @@ int main(void)
                     boardScale
                 );
 
+                DrawRectangle(0, 0, screenWidth, screenHeight, ColorAlpha(BLACK, 0.5f));
+
                 DrawText(
                     "Game Over!",
                     screenWidth/2 - MeasureText("Game Over!", 32)/2,
                     screenHeight/2 - 32,
                     32,
-                    BLACK
+                    WHITE
                 );
-
+                
                 DrawTime(&gameStruct);
+
+                DrawText(
+                    "Press 'r' to restart",
+                    screenWidth/2 - MeasureText("Press 'r' to restart", 32)/2,
+                    screenHeight/2 + 64,
+                    32,
+                    WHITE
+                );
             } break;
         case GS_WON:
             {
                 DrawNumbers(&gameStruct, numbersTiles, boardOffset, boardScale);
                 DrawOpened(&gameStruct, boardOffset, boardScale);
                 DrawFlags(&gameStruct, flagsTiles, boardOffset, boardScale);
+
+                DrawRectangle(0, 0, screenWidth, screenHeight, ColorAlpha(BLACK, 0.5f));
 
                 DrawText(
                     "You Won!",
@@ -235,6 +247,14 @@ int main(void)
                 );
 
                 DrawTime(&gameStruct);
+
+                DrawText(
+                    "Press 'r' to restart",
+                    screenWidth/2 - MeasureText("Press 'r' to restart", 32)/2,
+                    screenHeight/2 + 64,
+                    32,
+                    WHITE
+                );
             } break;
         }
 
