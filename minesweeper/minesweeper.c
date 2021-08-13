@@ -235,7 +235,7 @@ CellOpeningQueue *ChordCell(MinesweeperGame *game, Point startPoint)
 {
     if (IsPointInBoard(game->numbers, startPoint) && IsPointNumbered(game, startPoint))
     {
-        // First, check that there are exactly as many flags around the cell as the cell's value.
+        // First, check that there are exactly as many flags (NOT questions) around the cell as the cell's value.
         ARRAY_T cellNumber = GetValueAtPoint(game->numbers, startPoint);
         ARRAY_T numFlags = 0;
         for (INDEX_T neighborIndex = 0; neighborIndex < numNeighbors; neighborIndex++)
@@ -243,7 +243,11 @@ CellOpeningQueue *ChordCell(MinesweeperGame *game, Point startPoint)
             Point neighborPoint = GET_NEIGHBOR_POINT(startPoint, neighborIndex);
             if (IsPointFlag(game, neighborPoint))
             {
-                numFlags++;
+                FlagType flagType = GetValueAtPoint(game->flags, neighborPoint);
+                if (flagType == FT_FLAG)
+                {
+                    numFlags++;
+                }
             }
         }
 
@@ -294,21 +298,21 @@ CellReturnStatus FlagCell(MinesweeperGame *game, Point point)
         switch (GetValueAtPoint(game->flags, point))
         {
         // Closed -> Flagged
-        case 0:
+        case FT_NONE:
             {
-                SetValueAtPoint(game->flags, point, 1);
+                SetValueAtPoint(game->flags, point, (ARRAY_T)FT_FLAG);
                 return CRS_FLAG;
             }
         // Flagged -> Questioned
-        case 1:
+        case FT_FLAG:
             {
-                SetValueAtPoint(game->flags, point, 2);
+                SetValueAtPoint(game->flags, point, (ARRAY_T)FT_QUESTION);
                 return CRS_QUESTION;
             }
         // Questioned -> Closed
-        case 2:
+        case FT_QUESTION:
             {
-                SetValueAtPoint(game->flags, point, 0);
+                SetValueAtPoint(game->flags, point, (ARRAY_T)FT_NONE);
                 return CRS_CLOSED;
             }
         default:

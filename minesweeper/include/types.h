@@ -33,4 +33,11 @@ typedef enum
     CRS_QUESTION,
 } CellReturnStatus;
 
+typedef enum
+{
+    FT_NONE,
+    FT_FLAG,
+    FT_QUESTION,
+} FlagType;
+
 #endif
