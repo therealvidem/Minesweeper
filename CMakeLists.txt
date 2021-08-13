@@ -41,8 +41,10 @@ add_executable(minesweeper_game ${SRC_FILES})
 
 if (MSCV)
     target_compile_options(minesweeper_game PUBLIC $<$<CONFIG:Debug>:/W4 /WX>)
+    target_link_options(minesweeper_game PUBLIC $<$<CONFIG:Release>:/SUBSYSTEM:WINDOWS /ENTRY:main>)
 else()
     target_compile_options(minesweeper_game PUBLIC $<$<CONFIG:Debug>:-Wall -Werror -Wextra -Wpedantic>)
+    target_link_options(minesweeper_game PUBLIC $<$<CONFIG:Release>:-mwindows>)
 endif()
 
 target_include_directories(
