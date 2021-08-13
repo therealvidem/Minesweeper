@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/time.h>
+#include <time.h>
 #include <raylib.h>
 
 #include <minesweeper.h>
@@ -18,6 +18,77 @@ const unsigned screenHeight = 720;
 const unsigned boardWidth = 9;
 const unsigned boardHeight = 9;
 const unsigned amountMines = 10;
+const Vector2 boardScale = {
+    .x = (screenWidth/(float)boardWidth)/(BOARD_TILE_SIZE),
+    .y = (screenHeight/(float)boardHeight)/(BOARD_TILE_SIZE),
+};
+FILE *logFile = NULL;
+
+// From https://www.raylib.com/examples/web/core/loader.html?name=core_custom_logging
+// Custom logging funtion
+void CustomLog(int msgType, const char *text, va_list args)
+{
+    if (logFile == NULL)
+    {
+        logFile = stdout;
+    }
+    
+    char timeStr[64] = { 0 };
+    time_t now = time(NULL);
+    struct tm *tm_info = localtime(&now);
+
+    strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", tm_info);
+    if (logFile != NULL)
+    {
+        printf("[%s] ", timeStr);
+    }
+    fprintf(logFile, "[%s] ", timeStr);
+
+    switch (msgType)
+    {
+        case LOG_INFO:
+            {
+                fprintf(logFile, "[INFO] : ");
+                if (logFile != NULL)
+                {
+                    printf("[INFO] : ");
+                }
+            } break;
+        case LOG_ERROR:
+            {
+                fprintf(logFile, "[ERROR] : ");
+                if (logFile != NULL)
+                {
+                    printf("[ERROR] : ");
+                }
+            } break;
+        case LOG_WARNING:
+            {
+                fprintf(logFile, "[WARN] : ");
+                if (logFile != NULL)
+                {
+                    printf("[WARN] : ");
+                }
+            } break;
+        case LOG_DEBUG:
+            {
+                fprintf(logFile, "[DEBUG] : ");
+                if (logFile != NULL)
+                {
+                    printf("[DEBUG] : ");
+                }
+            } break;
+        default: break;
+    }
+
+    if (logFile != NULL)
+    {
+        vprintf(text, args);
+        printf("\n");
+    }
+    vfprintf(logFile, text, args);
+    fprintf(logFile, "\n");
+}
 
 void DrawNumbers(GameStruct *gameStruct, BoardTile numbersTiles[NUM_NUMBERS + 1], Vector2 boardOffset, Vector2 boardScale)
 {
@@ -69,7 +140,7 @@ void DrawMines(GameStruct *gameStruct, Vector2 boardOffset, Vector2 boardScale)
 
 void DrawTime(GameStruct *gameStruct)
 {
-    double finalTime = ((double)gameStruct->endTime.tv_sec + (double)gameStruct->endTime.tv_usec*1e-6) - ((double)gameStruct->startTime.tv_sec + (double)gameStruct->startTime.tv_usec*1e-6);
+    double finalTime = ((double)gameStruct->endTime.tv_sec + (double)gameStruct->endTime.tv_nsec*1e-9) - ((double)gameStruct->startTime.tv_sec + (double)gameStruct->startTime.tv_nsec*1e-9);
     DrawText(
         TextFormat("Time: %.4lfs", finalTime),
         screenWidth/2 - MeasureText(TextFormat("Time: %.4lfs", finalTime), 32)/2,
@@ -83,9 +154,19 @@ int main(void)
 {
     srand(time(NULL));
 
-#ifndef NDEBUG
+// #ifndef NDEBUG
     SetTraceLogLevel(LOG_DEBUG);
-#endif
+// #endif
+
+    logFile = fopen(LOG_FILE_NAME, "w");
+    if (logFile == NULL)
+    {
+        TraceLog(LOG_WARNING, "Log file '%s' could not be opened, reverting to default TraceLog()", LOG_FILE_NAME);
+    }
+    else
+    {
+        SetTraceLogCallback(CustomLog);
+    }
 
     InitWindow(screenWidth, screenHeight, "Minesweeper");
 
@@ -123,7 +204,6 @@ int main(void)
         BT_QUESTION,
     };
 
-    const Vector2 boardScale = { .x = 5.f, .y = 5.f };
     const Vector2 boardDrawSize = GetBoardDrawSize(boardWidth, boardHeight, &textures, boardScale);
     const Vector2 boardOffset = {
         .x = screenWidth/2.f - boardDrawSize.x/2.f,
@@ -134,14 +214,16 @@ int main(void)
         .game = (MinesweeperGame *)malloc(sizeof(MinesweeperGame)),
         .gameState = GS_INITIAL,
         .textures = &textures,
+
         .amountMines = amountMines,
         .boardScale = boardScale,
         .boardDrawSize = boardDrawSize,
         .boardOffset = boardOffset,
+        
         .lastOpenedPoint = (Point){ 0, 0 },
         .mineHitPoint = (Point){ 0, 0 },
-        .startTime = (struct timeval){0},
-        .endTime = (struct timeval){0},
+        .startTime = (struct timespec){0},
+        .endTime = (struct timespec){0},
     };
 
     InitGame(gameStruct.game, boardWidth, boardHeight);
@@ -271,6 +353,8 @@ int main(void)
         EndDrawing();
         //----------------------------------------------------------------------------------
     }
+
+    fclose(logFile);
     
     FreeGame(gameStruct.game);
 

@@ -11,12 +11,12 @@ void OnGameStateChange(GameStruct *gameStruct, GameState oldState, GameState new
 {
     if (newState == GS_ALIVE)
     {
-        gettimeofday(&(gameStruct->startTime), 0);
+        clock_gettime(CLOCK_MONOTONIC, &(gameStruct->startTime));
     }
 
     if (newState == GS_DEAD || newState == GS_WON)
     {
-        gettimeofday(&(gameStruct->endTime), 0);
+        clock_gettime(CLOCK_MONOTONIC, &(gameStruct->endTime));
     }
 
     if (newState == GS_WON)

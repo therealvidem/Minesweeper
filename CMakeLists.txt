@@ -39,7 +39,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/minesweeper)
 file(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 add_executable(minesweeper_game ${SRC_FILES})
 
-if (MSCV)
+if (MSVC)
     target_compile_options(minesweeper_game PUBLIC $<$<CONFIG:Debug>:/W4 /WX>)
     target_link_options(minesweeper_game PUBLIC $<$<CONFIG:Release>:/SUBSYSTEM:WINDOWS /ENTRY:main>)
 else()
@@ -72,11 +72,19 @@ if (APPLE)
 endif()
 
 # https://stackoverflow.com/questions/49636737/cmake-set-default-resource-asset-directory
-set (source "${CMAKE_SOURCE_DIR}/assets")
-set (destination "${CMAKE_CURRENT_BINARY_DIR}/assets")
+set(source "${CMAKE_SOURCE_DIR}/assets")
+set(destination "${CMAKE_CURRENT_BINARY_DIR}/assets")
 add_custom_command(
     TARGET minesweeper_game POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E create_symlink ${source} ${destination} 
     DEPENDS ${destination}
     COMMENT "symbolic link assets folder from ${source} => ${destination}"
+)
+
+set(LOG_FILE_NAME "game.log")
+target_compile_definitions(minesweeper_game PUBLIC LOG_FILE_NAME="${LOG_FILE_NAME}")
+set_property(
+    TARGET minesweeper_game
+    APPEND
+    PROPERTY ADDITIONAL_CLEAN_FILES "${CMAKE_CURRENT_BINARY_DIR}/${LOG_FILE_NAME}"
 )
