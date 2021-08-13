@@ -200,7 +200,7 @@ void HandleBoardInput(GameStruct *gameStruct)
             break;
         }
     }
-    else if (IsMouseButtonReleased(MOUSE_RIGHT_BUTTON))
+    else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
     {
         switch (gameStruct->gameState)
         {
@@ -213,7 +213,7 @@ void HandleBoardInput(GameStruct *gameStruct)
             break;
         }
     }
-    else if (IsMouseButtonReleased(MOUSE_MIDDLE_BUTTON))
+    else if (IsMouseButtonPressed(MOUSE_MIDDLE_BUTTON))
     {
         switch (gameStruct->gameState)
         {
