@@ -28,7 +28,6 @@
                 }
             ],
             "preLaunchTask": "CMake Build"
-            // "preLaunchTask": "Build game",
         },
     ]
 }
