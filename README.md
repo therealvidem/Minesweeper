@@ -18,29 +18,60 @@ A simple Minesweeper game coded in C using [RayLib](https://www.raylib.com/).
 - [ ] Add custom sizes.
 - [ ] Add (optional) animations.
 
+## Project Architecture
+
+The `minesweeper/` folder contains the standalone library for the underlying Minesweeper game. This means any other project could utilize this library to build another Minesweeper game with another interface or engine. Using CMake, this is integrated into this game as a static library.
+
+The `src/` folder contains the code for the actual game itself, utilizing the `minesweeper/` library. It uses RayLib to draw the game as well as handle user input. The `src/` folder is split into two other components: `src/graphics/` and `src/input/`, each handling their respective domains every update in the game.
+
+The `assets/` folder contains all assets for the game, including textures and sounds.
+
 ## Developing
 
-First, install [RayLib](https://github.com/raysan5/raylib/wiki). You will need the `libraylib.a` static library and `raylib.h` header file. Detailed instructions for Windows can be found [here](https://github.com/raysan5/raylib/wiki/Working-on-Windows). If you are compiling RayLib from source, these are found in `raylib/src` after executing make.
+This project uses [CMake](https://cmake.org/) to organize the building process (and, hopefully soon, testing process).
 
-Then, for this project, clone the repository:
+Fortunately, you do not have to have RayLib installed prior to using this project's CMake, as the CMakeLists.txt provided automatically installs RayLib if it is not found on your system.
 
-```
-git clone https://github.com/therealvidem/Minesweeper.git
-cd Minesweeper/
-```
+Regardless, I personally develop on Windows and use [vcpkg](https://github.com/Microsoft/vcpkg) to install RayLib outside the project.
 
-Make two folders called `lib/` and `include/` inside the project root. Put `libraylib.a` inside `lib/` and `raylib.h` inside `include/`.
+### Developing on Windows
 
-After that, you can compile using:
+For Windows, I personally utilize [vcpkg](https://github.com/Microsoft/vcpkg) to install the RayLib package. Note that when building your CMake build folder, you must set the `CMAKE_TOOLCHAIN_FILE` flag to `[your vcpkg location]/scripts/buildsystems/vcpkg.cmake`. This can be done by running the following command inside your build directory (typically a folder called `build/` inside the top-level directory):
 
-```
-make
+```bash
+cmake -DCMAKE_TOOLCHAIN_FILE="[your vcpkg location]/scripts/buildsystems/vcpkg.cmake" ..
 ```
 
-To debug, you can compile using:
+If using VSCode, you can in use the following setting to make the CMake extension automatically use the flag:
 
-```
-make debug
+```json
+"cmake.configureSettings": {
+    "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+}
 ```
 
-The source code is in `src/` and the assets are in `assets/`.
+### Developing on Linux
+
+For Linux, follow this guide on the [RayLib wiki](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux).
+
+### Building
+
+Setup CMake first by making your build folder and running CMake inside of it. On Linux, this looks like:
+
+```bash
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+```
+
+Note for Windows users using vcpkg: Add the flag `-DCMAKE_TOOLCHAIN_FILE="[your vcpkg location]/scripts/buildsystems/vcpkg.cmake"`.
+
+Note that to build for release, use `-DCMAKE_BUILD_TYPE=Release` instead of `-DCMAKE_BUILD_TYPE=Debug`.
+
+Finally, to build, run the following command:
+
+```bash
+cmake --build build/
+```
+
+Where `build/` is your build folder. The resulting binary or executable should be inside the build folder.

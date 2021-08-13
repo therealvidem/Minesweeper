@@ -4,7 +4,33 @@ project(
     VERSION 0.1.0
 )
 
-find_package(raylib 3.5 REQUIRED)
+find_package(raylib 3.5 QUIET)
+
+# From https://github.com/raysan5/raylib/blob/master/projects/CMake/CMakeLists.txt
+# You could change the QUIET above to REQUIRED and remove this if() clause
+# This part downloads raylib and builds it if it's not installed on your system
+if (NOT RAYLIB_FOUND) # If there's none, fetch and build raylib
+    include(FetchContent)
+
+    FetchContent_Declare(
+        raylib
+        GIT_REPOSITORY "https://github.com/raysan5/raylib"
+        GIT_TAG 3.5.0
+    )
+
+    FetchContent_GetProperties(raylib)
+    if (NOT RAYLIB_POPULATED) # Have we downloaded raylib yet?
+        set(FETCHCONTENT_QUIET NO)
+        FetchContent_Populate(raylib)
+
+        set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE) # don't build the supplied examples
+
+        # build raylib
+        add_subdirectory(${RAYLIB_SOURCE_DIR} ${RAYLIB_BINARY_DIR})
+
+    endif()
+
+endif()
 
 set(CMAKE_C_STANDARD 17)
 
