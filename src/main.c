@@ -140,12 +140,23 @@ void DrawMines(GameStruct *gameStruct, Vector2 boardOffset, Vector2 boardScale)
 
 void DrawTime(GameStruct *gameStruct)
 {
-    double finalTime = ((double)gameStruct->endTime.tv_sec + (double)gameStruct->endTime.tv_nsec*1e-9) - ((double)gameStruct->startTime.tv_sec + (double)gameStruct->startTime.tv_nsec*1e-9);
+    double finalTimeSeconds = ((double)gameStruct->endTime.tv_sec + (double)gameStruct->endTime.tv_nsec*1e-9) - ((double)gameStruct->startTime.tv_sec + (double)gameStruct->startTime.tv_nsec*1e-9);
+    double finalTimeMinutes = finalTimeSeconds / 60;
+    double finalTimeHours = finalTimeMinutes / 60;
+    double finalTimeDays = finalTimeHours / 24;
+
+    const char *timeString = TextFormat(
+        "Time: %d days, %d hours, %d minutes, %.4lf seconds",
+        (int)finalTimeDays,
+        (int)finalTimeHours,
+        (int)finalTimeMinutes,
+        finalTimeSeconds
+    );
     DrawText(
-        TextFormat("Time: %.4lfs", finalTime),
-        screenWidth/2 - MeasureText(TextFormat("Time: %.4lfs", finalTime), 32)/2,
+        timeString,
+        screenWidth/2 - MeasureText(timeString, 16)/2,
         screenHeight/2 + 16,
-        32,
+        16,
         WHITE
     );
 }
@@ -306,9 +317,9 @@ int main(void)
 
                 DrawText(
                     "Press 'r' to restart",
-                    screenWidth/2 - MeasureText("Press 'r' to restart", 32)/2,
-                    screenHeight/2 + 64,
-                    32,
+                    screenWidth/2 - MeasureText("Press 'r' to restart", 16)/2,
+                    screenHeight/2 + 48,
+                    16,
                     WHITE
                 );
             } break;
@@ -332,9 +343,9 @@ int main(void)
 
                 DrawText(
                     "Press 'r' to restart",
-                    screenWidth/2 - MeasureText("Press 'r' to restart", 32)/2,
-                    screenHeight/2 + 64,
-                    32,
+                    screenWidth/2 - MeasureText("Press 'r' to restart", 16)/2,
+                    screenHeight/2 + 48,
+                    16,
                     WHITE
                 );
             } break;
