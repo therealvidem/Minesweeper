@@ -55,7 +55,7 @@ bool HandleLeftClickCell(GameStruct *gameStruct)
                     } break;
                 case CRS_MINE:
                     {
-                        gameStruct->gameState = GS_DEAD;
+                        ChangeGameState(gameStruct, GS_DEAD);
                         opening = false;
                     } break;
                 default:
@@ -79,7 +79,7 @@ bool HandleLeftClickCell(GameStruct *gameStruct)
             {
             case CRS_MINE:
                 {
-                    gameStruct->gameState = GS_DEAD;
+                    ChangeGameState(gameStruct, GS_DEAD);
                 } break;
             default:
                 break;
@@ -117,9 +117,9 @@ void HandleBoardInput(GameStruct *gameStruct)
                 bool foundPoint = GetPointFromPosition(gameStruct, mousePosition, &clickedPoint);
                 if (foundPoint && !IsPointFlag(gameStruct->game, clickedPoint))
                 {
-                    gameStruct->gameState = GS_ALIVE;
                     StartGame(gameStruct->game, GetRandomValue, gameStruct->amountMines, clickedPoint);
                     HandleLeftClickCell(gameStruct);
+                    ChangeGameState(gameStruct, GS_ALIVE);
                 }
             } break;
         case GS_ALIVE:
@@ -149,7 +149,7 @@ void HandleBoardInput(GameStruct *gameStruct)
     // Restart the game
     else if (IsKeyPressed(KEY_R))
     {
-        gameStruct->gameState = GS_INITIAL;
+        ChangeGameState(gameStruct, GS_INITIAL);
         ResetGame(gameStruct->game);
     }
 #ifndef NDEBUG

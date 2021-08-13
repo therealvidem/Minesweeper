@@ -9,7 +9,6 @@ void InitGame(MinesweeperGame *game, INDEX_T width, INDEX_T height)
     game->flags = CreateBoard(width, height);
     game->numbers = CreateBoard(width, height);
     game->opened = CreateBoard(width, height);
-    game->startTime = (time_t)0;
 }
 
 Point GetRandomPoint(MinesweeperGame *game, int (*rng)(int, int))
@@ -157,8 +156,6 @@ bool StartGame(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amountMines,
         // }
 
         // FreeFloodFiller(ff);
-
-        game->startTime = clock();
         return true;
     }
     return false;
@@ -274,7 +271,6 @@ void ResetGame(MinesweeperGame *game)
     ClearBoard(game->flags);
     ClearBoard(game->numbers);
     ClearBoard(game->opened);
-    game->startTime = (time_t)0;
 }
 
 void FreeGame(MinesweeperGame *game)

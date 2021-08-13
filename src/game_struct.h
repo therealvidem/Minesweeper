@@ -2,7 +2,7 @@
 #define GAME_STRUCT_H
 
 #include <raylib.h>
-
+#include <sys/time.h>
 #include <minesweeper.h>
 #include "graphics/textures.h"
 
@@ -28,6 +28,8 @@ typedef struct
 
     GameState gameState;
     Point lastOpenedPoint;
+    struct timeval startTime;
+    struct timeval endTime;
 } GameStruct;
 
 #endif

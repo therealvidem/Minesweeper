@@ -1,9 +1,11 @@
 #ifndef BOARD_INPUT_H
 #define BOARD_INPUT_H
 
+#include <time.h>
 #include <raylib.h>
 #include <minesweeper.h>
 #include "../game_struct.h"
+#include "state_handler.h"
 
 // Gets the nearest point to the given `position` and sets it to `outPoint`.
 // Returns true if a point was found, otherwise false.

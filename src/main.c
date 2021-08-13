@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <sys/time.h>
 #include <raylib.h>
 
 #include <minesweeper.h>
@@ -8,9 +8,76 @@
 #include "graphics/board_graphics.h"
 #include "input/board_input.h"
 #include "game_struct.h"
+#include "state_handler.h"
 
 #define BOARD_TILE_SET_SIZE 256
 #define BOARD_TILE_SIZE 16
+
+const unsigned screenWidth = 720;
+const unsigned screenHeight = 720;
+const unsigned boardWidth = 9;
+const unsigned boardHeight = 9;
+const unsigned amountMines = 10;
+
+void DrawNumbers(GameStruct *gameStruct, BoardTile numbersTiles[NUM_NUMBERS + 1], Vector2 boardOffset, Vector2 boardScale)
+{
+    DrawBoard(
+        gameStruct->game->numbers,
+        gameStruct->textures,
+        numbersTiles,
+        NUM_NUMBERS + 1,
+        boardOffset,
+        boardScale
+    );
+}
+
+void DrawOpened(GameStruct *gameStruct, Vector2 boardOffset, Vector2 boardScale)
+{
+    DrawMarkedBoard(
+        gameStruct->game->opened,
+        gameStruct->textures,
+        BT_CLOSED,
+        BT_NOTHING,
+        boardOffset,
+        boardScale
+    );
+}
+
+void DrawFlags(GameStruct *gameStruct, BoardTile flagsTiles[NUM_FLAGS + 1], Vector2 boardOffset, Vector2 boardScale)
+{
+    DrawBoard(
+        gameStruct->game->flags,
+        gameStruct->textures,
+        flagsTiles,
+        NUM_FLAGS + 1,
+        boardOffset,
+        boardScale
+    );
+}
+
+void DrawMines(GameStruct *gameStruct, Vector2 boardOffset, Vector2 boardScale)
+{
+    DrawMarkedBoard(
+        gameStruct->game->mines,
+        gameStruct->textures,
+        BT_NOTHING,
+        BT_MINE,
+        boardOffset,
+        boardScale
+    );
+}
+
+void DrawTime(GameStruct *gameStruct)
+{
+    double finalTime = ((double)gameStruct->endTime.tv_sec + (double)gameStruct->endTime.tv_usec*1e-6) - ((double)gameStruct->startTime.tv_sec + (double)gameStruct->startTime.tv_usec*1e-6);
+    DrawText(
+        TextFormat("Time: %.4lfs", finalTime),
+        screenWidth/2 - MeasureText(TextFormat("Time: %.4lfs", finalTime), 32)/2,
+        screenHeight/2 + 16,
+        32,
+        BLACK
+    );
+}
 
 int main(void)
 {
@@ -19,12 +86,6 @@ int main(void)
 #ifndef NDEBUG
     SetTraceLogLevel(LOG_DEBUG);
 #endif
-
-    const unsigned screenWidth = 720;
-    const unsigned screenHeight = 720;
-    const unsigned boardWidth = 9;
-    const unsigned boardHeight = 9;
-    const unsigned amountMines = 10;
 
     InitWindow(screenWidth, screenHeight, "Minesweeper");
 
@@ -68,15 +129,18 @@ int main(void)
         .x = screenWidth/2.f - boardDrawSize.x/2.f,
         .y = screenHeight/2.f - boardDrawSize.y/2.f,
     };
-    
+
     GameStruct gameStruct = (GameStruct){
         .game = (MinesweeperGame *)malloc(sizeof(MinesweeperGame)),
+        .gameState = GS_INITIAL,
         .textures = &textures,
         .amountMines = amountMines,
         .boardScale = boardScale,
         .boardDrawSize = boardDrawSize,
         .boardOffset = boardOffset,
         .lastOpenedPoint = (Point){ 0, 0 },
+        .startTime = (struct timeval){0},
+        .endTime = (struct timeval){0},
     };
 
     InitGame(gameStruct.game, boardWidth, boardHeight);
@@ -110,7 +174,7 @@ int main(void)
 
         if (HasWonGame(gameStruct.game) && gameStruct.gameState != GS_WON)
         {
-            gameStruct.gameState = GS_WON;
+            ChangeGameState(&gameStruct, GS_WON);
             FillBoard(gameStruct.game->opened, (ARRAY_T)true);
         }
 
@@ -127,61 +191,15 @@ int main(void)
         case GS_ALIVE:
         case GS_INITIAL:
             {
-                DrawBoard(
-                    gameStruct.game->numbers,
-                    &textures,
-                    numbersTiles,
-                    NUM_NUMBERS + 1,
-                    boardOffset,
-                    boardScale
-                );
-
-                DrawMarkedBoard(
-                    gameStruct.game->opened,
-                    &textures,
-                    BT_CLOSED,
-                    BT_NOTHING,
-                    boardOffset,
-                    boardScale
-                );
-
-                DrawBoard(
-                    gameStruct.game->flags,
-                    &textures,
-                    flagsTiles,
-                    NUM_FLAGS + 1,
-                    boardOffset,
-                    boardScale
-                );
+                DrawNumbers(&gameStruct, numbersTiles, boardOffset, boardScale);
+                DrawOpened(&gameStruct, boardOffset, boardScale);
+                DrawFlags(&gameStruct, flagsTiles, boardOffset, boardScale);
             } break;
         case GS_DEAD:
             {
-                DrawBoard(
-                    gameStruct.game->numbers,
-                    &textures,
-                    numbersTiles,
-                    NUM_NUMBERS + 1,
-                    boardOffset,
-                    boardScale
-                );
-
-                // DrawBoard(
-                //     gameStruct.game->flags,
-                //     &textures,
-                //     flagsTiles,
-                //     NUM_FLAGS + 1,
-                //     boardOffset,
-                //     boardScale
-                // );
-
-                DrawMarkedBoard(
-                    gameStruct.game->mines,
-                    &textures,
-                    BT_NOTHING,
-                    BT_MINE,
-                    boardOffset,
-                    boardScale
-                );
+                DrawNumbers(&gameStruct, numbersTiles, boardOffset, boardScale);
+                DrawOpened(&gameStruct, boardOffset, boardScale);
+                DrawMines(&gameStruct, boardOffset, boardScale);
 
                 DrawCell(
                     &textures,
@@ -198,44 +216,14 @@ int main(void)
                     32,
                     BLACK
                 );
+
+                DrawTime(&gameStruct);
             } break;
         case GS_WON:
             {
-               DrawBoard(
-                    gameStruct.game->numbers,
-                    &textures,
-                    numbersTiles,
-                    NUM_NUMBERS + 1,
-                    boardOffset,
-                    boardScale
-                );
-
-                DrawMarkedBoard(
-                    gameStruct.game->opened,
-                    &textures,
-                    BT_CLOSED,
-                    BT_NOTHING,
-                    boardOffset,
-                    boardScale
-                );
-
-                // DrawBoard(
-                //     gameStruct.game->flags,
-                //     &textures,
-                //     flagsTiles,
-                //     NUM_FLAGS + 1,
-                //     boardOffset,
-                //     boardScale
-                // );
-
-                DrawMarkedBoard(
-                    gameStruct.game->mines,
-                    &textures,
-                    BT_NOTHING,
-                    BT_MINE,
-                    boardOffset,
-                    boardScale
-                );
+                DrawNumbers(&gameStruct, numbersTiles, boardOffset, boardScale);
+                DrawOpened(&gameStruct, boardOffset, boardScale);
+                DrawFlags(&gameStruct, flagsTiles, boardOffset, boardScale);
 
                 DrawText(
                     "You Won!",
@@ -244,6 +232,8 @@ int main(void)
                     32,
                     ColorFromHSV(wonTextHueValue, 1.f, 1.f)
                 );
+
+                DrawTime(&gameStruct);
             } break;
         }
 

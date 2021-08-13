@@ -2,7 +2,6 @@
 #define MINESWEEPER_H
 
 #include <stdlib.h>
-#include <time.h>
 #include "board.h"
 #include "../point_queue.h"
 
@@ -12,7 +11,6 @@ typedef struct
     Board *flags;
     Board *numbers;
     Board *opened;
-    time_t startTime;
 
     INDEX_T width;
     INDEX_T height;
