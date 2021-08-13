@@ -34,9 +34,9 @@ Fortunately, you do not have to have RayLib installed prior to using this projec
 
 Regardless, I personally develop on Windows and use [vcpkg](https://github.com/Microsoft/vcpkg) to install RayLib outside the project.
 
-### Developing on Windows
+### Manually Installing RayLib on Windows
 
-For Windows, I personally utilize [vcpkg](https://github.com/Microsoft/vcpkg) to install the RayLib package. Note that when building your CMake build folder, you must set the `CMAKE_TOOLCHAIN_FILE` flag to `[your vcpkg location]/scripts/buildsystems/vcpkg.cmake`. This can be done by running the following command inside your build directory (typically a folder called `build/` inside the top-level directory):
+I personally use [vcpkg](https://github.com/Microsoft/vcpkg) to install the RayLib package. Note that when building your CMake build folder, you must set the `CMAKE_TOOLCHAIN_FILE` flag to `[your vcpkg location]/scripts/buildsystems/vcpkg.cmake`. This can be done by running the following command inside the build folder (`build/`):
 
 ```bash
 cmake -DCMAKE_TOOLCHAIN_FILE="[your vcpkg location]/scripts/buildsystems/vcpkg.cmake" ..
@@ -50,13 +50,13 @@ If using VSCode, you can in use the following setting to make the CMake extensio
 }
 ```
 
-### Developing on Linux
+### Manually Installing RayLib on Linux
 
-For Linux, follow this guide on the [RayLib wiki](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux).
+Follow this guide on the [RayLib wiki](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux).
 
 ### Building
 
-Setup CMake first by making your build folder and running CMake inside of it. On Linux, this looks like:
+Setup CMake first by making the build folder `build/` and running CMake inside of it:
 
 ```bash
 mkdir build
@@ -74,4 +74,4 @@ Finally, to build, run the following command:
 cmake --build build/
 ```
 
-Where `build/` is your build folder. The resulting binary or executable should be inside the build folder.
+The resulting binary or executable should be inside `build/`.
