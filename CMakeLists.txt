@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 project(
     minesweeper_game
     VERSION 0.1.0
@@ -6,7 +6,7 @@ project(
 
 find_package(raylib 3.5 QUIET)
 
-# From https://github.com/raysan5/raylib/blob/master/projects/CMake/CMakeLists.txt
+# From https://github.com/raysan5/raylib/blob/master/projects/CMake/CMakeLists.txt and https://www.voyagingmind.com/posts/cmake_and_raylib/
 # You could change the QUIET above to REQUIRED and remove this if() clause
 # This part downloads raylib and builds it if it's not installed on your system
 if (NOT RAYLIB_FOUND) # If there's none, fetch and build raylib
