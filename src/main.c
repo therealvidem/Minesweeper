@@ -267,10 +267,9 @@ int main(void)
             }
         }
 
-        if (HasWonGame(gameStruct.game) && gameStruct.gameState != GS_WON)
+        if (HasWonGame(gameStruct.game) && gameStruct.gameState != GS_WON && gameStruct.gameState != GS_DEAD)
         {
             ChangeGameState(&gameStruct, GS_WON);
-            FillBoard(gameStruct.game->opened, (ARRAY_T)true);
         }
 
         //----------------------------------------------------------------------------------
@@ -379,3 +378,10 @@ int main(void)
 
     return 0;
 }
+
+#if defined(WIN32) && defined(NDEBUG)
+int WinMain()
+{
+    main(__argv, __argc);
+}
+#endif

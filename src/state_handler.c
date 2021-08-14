@@ -34,6 +34,10 @@ void OnGameStateChange(GameStruct *gameStruct, GameState oldState, GameState new
             {
                 MarkBoardAtIndex(gameStruct->game->flags, i);
             }
+            else
+            {
+                MarkBoardAtIndex(gameStruct->game->opened, i);
+            }
         }
     }
 }
