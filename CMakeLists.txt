@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 project(
     minesweeper_game
-    VERSION 0.1.0
+    VERSION 0.1.1
 )
 
 find_package(raylib 3.5 CONFIG QUIET)
