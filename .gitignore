@@ -6,3 +6,4 @@ Debug/
 *.o
 CMakeFiles/
 CMakeCache.txt
+*.aps
