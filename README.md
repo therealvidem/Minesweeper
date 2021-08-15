@@ -18,11 +18,11 @@ A simple Minesweeper game coded in C using [RayLib](https://www.raylib.com/).
 - [ ] Add custom sizes.
 - [ ] Add (optional) animations.
 
-## Project Architecture
+## Project Structure
 
-The `minesweeper/` folder contains the standalone library for the underlying Minesweeper game. This means any other project could utilize this library to build another Minesweeper game with another interface or engine. Using CMake, this is integrated into this game as a static library.
+The `minesweeper/` folder contains the standalone library for the underlying Minesweeper game. This means any other project could utilize this library to make another interface. Using CMake, this is integrated into this game as a static library.
 
-The `src/` folder contains the code for the actual game itself, utilizing the `minesweeper/` library. It uses RayLib to draw the game as well as handle user input. The `src/` folder is split into two other components: `src/graphics/` and `src/input/`, each handling their respective domains every update in the game.
+The `src/` folder contains the code for the actual game itself, utilizing the `minesweeper/` library. It uses RayLib to draw the game as well as handle user input. The `src/` folder is split into two other components: `src/graphics/` and `src/input/`, each handling their respective domain every frame in the game.
 
 The `assets/` folder contains all assets for the game, including textures and sounds.
 
