@@ -9,6 +9,8 @@ void ChangeGameState(GameStruct *gameStruct, GameState newState)
 
 void OnGameStateChange(GameStruct *gameStruct, GameState oldState, GameState newState)
 {
+    if (oldState == newState) return;
+    
     if (newState == GS_ALIVE)
     {
         if (!gettime(&(gameStruct->startTime)))
