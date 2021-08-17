@@ -32,6 +32,8 @@ This project uses [CMake](https://cmake.org/) to organize the building process (
 
 Fortunately, you do not have to have RayLib installed prior to using this project's CMake, as the CMakeLists.txt provided automatically installs RayLib if it is not found on your system.
 
+Do note, however, that there are prerequisites for Linux, as outlined in [Linux Prerequisites](#linux-prerequisites).
+
 Regardless, I personally develop on Windows and use [vcpkg](https://github.com/Microsoft/vcpkg) to install RayLib outside the project.
 
 ### Manually Installing RayLib on Windows
@@ -53,6 +55,12 @@ If using VSCode, you can in use the following setting to make the CMake extensio
 ### Manually Installing RayLib on Linux
 
 Follow this guide on the [RayLib wiki](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux).
+
+### Linux Prerequisites
+
+In order for RayLib to be installed, the libraries outlined [here](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux#install-required-libraries) are necessary.
+
+Note that OpenGL 3.3 is required for RayLib 3.5, which is the currently required version of this game. The game may not run properly otherwise, if at all.
 
 ### Building
 
