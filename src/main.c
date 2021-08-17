@@ -72,13 +72,17 @@ void CustomLog(int msgType, const char *text, va_list args)
         default: break;
     }
 
+    va_list argsCopy;
+    va_copy(argsCopy, args);
     vprintf(text, args);
     printf("\n");
     if (logFile != NULL)
     {
-        vfprintf(logFile, text, args);
+        vfprintf(logFile, text, argsCopy);
         fprintf(logFile, "\n");
     }
+    va_end(args);
+    va_end(argsCopy);
 }
 
 void DrawNumbers(GameStruct *gameStruct, BoardTile numbersTiles[NUM_NUMBERS + 1], Vector2 boardOffset, Vector2 boardScale)
