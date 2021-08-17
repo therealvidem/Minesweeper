@@ -141,12 +141,17 @@ void DrawTime(GameStruct *gameStruct)
     double finalTimeDays = finalTimeHours / 24;
 
     const char *timeString = TextFormat(
-        "Time: %d days, %d hours, %d minutes, %.4lf seconds",
+        "Time: %d day%s, %d hour%s, %d minute%s, %.4lf second%s",
         (int)finalTimeDays,
+        (int)finalTimeDays == 1 ? "" : "s",
         (int)finalTimeHours,
+        (int)finalTimeHours == 1 ? "" : "s",
         (int)finalTimeMinutes,
-        finalTimeSeconds
+        (int)finalTimeMinutes == 1 ? "" : "s",
+        finalTimeSeconds,
+        finalTimeSeconds == 1.f ? "" : "s"
     );
+
     DrawText(
         timeString,
         SCREEN_WIDTH/2 - MeasureText(timeString, 16)/2,
