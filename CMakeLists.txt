@@ -79,14 +79,21 @@ if (APPLE)
 endif ()
 
 # https://stackoverflow.com/questions/49636737/cmake-set-default-resource-asset-directory
-set(source "${CMAKE_SOURCE_DIR}/assets")
-set(destination "$<TARGET_FILE_DIR:minesweeper_game>/assets")
-add_custom_command(
-    TARGET minesweeper_game POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E create_symlink ${source} ${destination} 
-    DEPENDS ${destination}
-    COMMENT "symbolic link assets folder from ${source} => ${destination}"
-)
+if (NOT WIN32)
+    set(source "${CMAKE_SOURCE_DIR}/assets")
+    set(destination "$<TARGET_FILE_DIR:minesweeper_game>/assets")
+    add_custom_command(
+        TARGET minesweeper_game POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${source} ${destination} 
+        DEPENDS ${destination}
+        COMMENT "symbolic link assets folder from ${source} => ${destination}"
+    )
+else()
+    add_custom_command(TARGET minesweeper_game POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/assets"
+        "$<TARGET_FILE_DIR:minesweeper_game>/assets")
+endif ()
 
 set(LOG_FILE_NAME "game.log")
 target_compile_definitions(minesweeper_game PRIVATE LOG_FILE_NAME="${LOG_FILE_NAME}")
