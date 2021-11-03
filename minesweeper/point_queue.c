@@ -3,6 +3,10 @@
 PointQueue *CreatePointQueue()
 {
     PointQueue *newQueue = (PointQueue *)malloc(sizeof(PointQueue));
+    if (newQueue == NULL)
+    {
+        return NULL;
+    }
     newQueue->head = NULL;
     newQueue->tail = NULL;
     return newQueue;
@@ -18,11 +22,15 @@ Point PeekPointQueue(PointQueue *queue)
     return queue->head->point;
 }
 
-void EnqueuePointQueue(PointQueue *queue, Point point)
+bool EnqueuePointQueue(PointQueue *queue, Point point)
 {
     if (queue->head == NULL)
     {
         PointNode *newPointNode = malloc(sizeof(PointNode));
+        if (newPointNode == NULL)
+        {
+            return false;
+        }
         newPointNode->next =  NULL;
         newPointNode->point = point;
         queue->head = newPointNode;
@@ -31,11 +39,16 @@ void EnqueuePointQueue(PointQueue *queue, Point point)
     else
     {
         PointNode *newPointNode = malloc(sizeof(PointNode));
+        if (newPointNode == NULL)
+        {
+            return false;
+        }
         newPointNode->next = NULL;
         newPointNode->point = point;
         queue->tail->next = newPointNode;
         queue->tail = newPointNode;
     }
+    return true;
 }
 
 Point DequeuePointQueue(PointQueue *queue)

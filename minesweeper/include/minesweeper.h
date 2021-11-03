@@ -26,7 +26,7 @@ typedef struct
 } CellOpeningQueue;
 
 // Generates a random point within the bounds of the game space.
-Point GetRandomPoint(MinesweeperGame *game, int (*rng)(int, int));
+Point GetRandomPoint(MinesweeperGame *game, INDEX_T (*rng)(INDEX_T, INDEX_T));
 
 // Returns true if `point` is at a mine, false otherwise.
 bool IsPointMine(MinesweeperGame *game, Point point);
@@ -50,11 +50,11 @@ bool IsPointOpen(MinesweeperGame *game, Point point);
 void InitGame(MinesweeperGame *game, INDEX_T width, INDEX_T height);
 
 // Randomly generates a set amount of mines.
-void GenerateMines(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amount);
+void GenerateMines(MinesweeperGame *game, INDEX_T (*rng)(INDEX_T, INDEX_T), INDEX_T amount);
 
 // Starts `game` by starting the timer and revealing the cells at `startPoint`.
 // Returns true if the initial `startPoint` is within the board, false otherwise.
-bool StartGame(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amountMines, Point startPoint);
+bool StartGame(MinesweeperGame *game, INDEX_T (*rng)(INDEX_T, INDEX_T), INDEX_T amountMines, Point startPoint);
 
 // Opens a single cell without recursively opening empty cells around.
 // Returns CRS_FAILED if the cell is flagged or was already opened, otherwise

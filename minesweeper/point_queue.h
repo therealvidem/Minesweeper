@@ -32,7 +32,8 @@ bool IsPointQueueEmpty(PointQueue *queue);
 // Returns the point at the front of the queue.
 Point PeekPointQueue(PointQueue *queue);
 
-void EnqueuePointQueue(PointQueue *queue, Point point);
+// Returns true on successful enqueue (allocated successfully), false otherwise
+bool EnqueuePointQueue(PointQueue *queue, Point point);
 
 // Note: `queue` MUST NOT be empty in order to call this function,
 // otherwise it will fail. Check to make sure !IsPointQueueEmpty()

@@ -18,8 +18,16 @@ Board *CreateBoard(INDEX_T width, INDEX_T height)
 {
     size_t array_size = sizeof(ARRAY_T) * width * height;
     ARRAY_T *arr = (ARRAY_T *)malloc(array_size);
+    if (arr == NULL)
+    {
+        return NULL;
+    }
     memset(arr, 0, array_size);
     Board *newBoard = malloc(sizeof(Board));
+    if (newBoard == NULL)
+    {
+        return NULL;
+    }
     newBoard->_arr = arr;
     newBoard->width = width;
     newBoard->height = height;

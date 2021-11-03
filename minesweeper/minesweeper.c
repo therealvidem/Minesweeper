@@ -11,7 +11,7 @@ void InitGame(MinesweeperGame *game, INDEX_T width, INDEX_T height)
     game->opened = CreateBoard(width, height);
 }
 
-Point GetRandomPoint(MinesweeperGame *game, int (*rng)(int, int))
+Point GetRandomPoint(MinesweeperGame *game, INDEX_T (*rng)(INDEX_T, INDEX_T))
 {
     return (Point){
         .x = rng(0, game->width - 1),
@@ -44,7 +44,7 @@ bool IsPointOpen(MinesweeperGame *game, Point point)
     return IsBoardMarkedAtPoint(game->opened, point);
 }
 
-void GenerateMines(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amount)
+void GenerateMines(MinesweeperGame *game, INDEX_T (*rng)(INDEX_T, INDEX_T), INDEX_T amount)
 {
     if (amount >= game->amountCells)
         amount = game->amountCells;
@@ -80,7 +80,7 @@ void UpdateNumbers(MinesweeperGame *game)
     for (INDEX_T i = 0; i < game->amountCells; i++)
     {
         Point point = GetPointFromIndex(game->numbers, i);
-        INDEX_T numMines = 0;
+        int numMines = 0;
         for (INDEX_T neighborIndex = 0; neighborIndex < numNeighbors; neighborIndex++)
         {
             Point neighborPoint = GET_NEIGHBOR_POINT(point, neighborIndex);
@@ -93,7 +93,7 @@ void UpdateNumbers(MinesweeperGame *game)
     }
 }
 
-void ReplaceMine(MinesweeperGame *game, int (*rng)(int, int), Point originalPoint, Point startPoint)
+void ReplaceMine(MinesweeperGame *game, INDEX_T (*rng)(INDEX_T, INDEX_T), Point originalPoint, Point startPoint)
 {
     UnmarkBoardAtPoint(game->mines, originalPoint);
                     
@@ -110,7 +110,7 @@ void ReplaceMine(MinesweeperGame *game, int (*rng)(int, int), Point originalPoin
     MarkBoardAtPoint(game->mines, newPoint);
 }
 
-bool StartGame(MinesweeperGame *game, int (*rng)(int, int), INDEX_T amountMines, Point startPoint)
+bool StartGame(MinesweeperGame *game, INDEX_T (*rng)(INDEX_T, INDEX_T), INDEX_T amountMines, Point startPoint)
 {
     if (IsPointInBoard(game->opened, startPoint))
     {
@@ -185,6 +185,10 @@ CellReturnStatus OpenSingleCell(MinesweeperGame *game, Point point)
 CellOpeningQueue *CreateCellOpeningQueue(MinesweeperGame *game, Point startPoint)
 {
     CellOpeningQueue *newOpenQueue = (CellOpeningQueue *)malloc(sizeof(CellOpeningQueue));
+    if (newOpenQueue == NULL)
+    {
+        return NULL;
+    }
     PointQueue *queue = CreatePointQueue();
     newOpenQueue->game = game;
     newOpenQueue->startPoint = startPoint;

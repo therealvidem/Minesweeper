@@ -6,10 +6,11 @@
 #include <minesweeper.h>
 #include "../game_struct.h"
 #include "state_handler.h"
+#include "util.h"
 
 // Gets the nearest point to the given `position` and sets it to `outPoint`.
 // Returns true if a point was found, otherwise false.
-Point GetNearestPoint(GameStruct *gameStruct, Vector2 position, Point *outPoint);
+bool GetPointFromPosition(GameStruct* gameStruct, Vector2 position, Point* outPoint);
 
 // Executes a flood fill at `point`.
 void ExecuteFloodFill(GameStruct *gameStruct, Point point);

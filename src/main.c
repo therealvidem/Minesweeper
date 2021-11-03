@@ -181,6 +181,8 @@ int main(void)
         SetTraceLogCallback(CustomLog);
     }
 
+    TraceLog(LOG_DEBUG, "cwd: %s", GetWorkingDirectory());
+
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Minesweeper");
 
     Image titleIcon = LoadImage("assets/icon.dds");
