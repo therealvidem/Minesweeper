@@ -181,8 +181,6 @@ int main(void)
         SetTraceLogCallback(CustomLog);
     }
 
-    TraceLog(LOG_DEBUG, "cwd: %s", GetWorkingDirectory());
-
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Minesweeper");
 
     Image titleIcon = LoadImage("assets/icon.dds");
@@ -376,6 +374,9 @@ int main(void)
         //----------------------------------------------------------------------------------
     }
 
+    // Need to unset custom log so that any logging that happens
+    // after the log file closes does not try to write to the file.
+    SetTraceLogCallback(NULL);
     fclose(logFile);
     
     FreeGame(gameStruct.game);
