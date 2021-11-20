@@ -161,7 +161,7 @@ void DrawTime(GameStruct *gameStruct)
     );
 }
 
-int main(void)
+int main(char *argv[], int argc)
 {
     logFile = NULL;
 
