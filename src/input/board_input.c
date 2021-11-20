@@ -187,7 +187,7 @@ void HandleBoardInput(GameStruct *gameStruct)
                 bool foundPoint = GetPointFromPosition(gameStruct, mousePosition, &clickedPoint);
                 if (foundPoint && !IsPointFlag(gameStruct->game, clickedPoint))
                 {
-                    StartGame(gameStruct->game, GetRandomNumber, gameStruct->amountMines, clickedPoint);
+                    StartGame(gameStruct->game, GetRandomValue, gameStruct->amountMines, clickedPoint);
                     HandleLeftClickCell(gameStruct);
                     ChangeGameState(gameStruct, GS_ALIVE);
                 }
