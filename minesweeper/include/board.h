@@ -11,8 +11,8 @@ extern const INDEX_T neighborCellsY[];
 extern const INDEX_T numNeighbors;
 // Gets the coordinates of the ith neighbor of `point` (from 0 to 7).
 // The order of the neighbors start at the top-left (when viewing top-left corner as x = 0, y = 0), then
-// goes clockwise. So, the 0th neighbor of (4, 5) is (3, 4), the 1st neighbor is (3, 5), the
-// 2nd neighbor is (3, 6), the 3rd neighbor is (4, 6), and so on and so forth.
+// goes clockwise. So, the 0th neighbor of (4, 5) is (3, 4), the 1st neighbor is (4, 4), the
+// 2nd neighbor is (5, 4), the 3rd neighbor is (5, 5), and so on and so forth.
 // NOTE: This does NOT check whether the point is out of bounds of a board. This
 // can be checked with IsPointInBoard().
 // This is a macro defined as a comma-separated pair of values: x, y of the neighbor cell.
